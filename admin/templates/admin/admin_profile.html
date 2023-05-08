@@ -1,0 +1,107 @@
+{% extends 'admin/admin_header.html' %}
+
+{% block title %} Administrator Profil {% endblock %}
+
+{% block stylesheets %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/admin_profile.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ super() }}
+
+    <script type="text/javascript" src="{{ url_for('.static', filename='/js/remove.js') }}"> </script>
+
+{% endblock %}
+
+{% block content %}
+    {% if current_user['fornavn'] is not none and current_user['etternavn'] is not none %}
+        <h2 class="admin-full-name"> {{ current_user['fornavn'] }} {{ current_user['etternavn'] }} </h2>
+    {% elif current_user['fornavn'] is not none %}
+        <h2 class="admin-full-name"> {{ current_user['fornavn'] }} </h2>
+    {% elif current_user['etternavn'] is not none %}
+        <h2 class="admin-full-name"> {{ current_user['etternavn'] }} </h2>
+    {% endif %}
+
+    <section>
+        <h3 class="section-title"> Mine Quizer </h3>
+        {% if quizzes %}
+            {% for quiz in quizzes %}
+
+                <div class="quiz-container">
+                    <a href="{{ url_for('quiz.quiz_details', quiz_id=quiz.id) }}" class="quiz-link"> <span> {{ quiz.navn }} </span> </a>
+                    <img src="{{ url_for('static', filename='/img/icon/trash.ico') }}" class="image-button" alt="Remove Quiz" onclick="onRemoveQuizClick({{'"' + url_for('quiz.remove_quiz', quiz_id=quiz.id) + '"' }})">
+                    <a href="{{ url_for('quiz.edit_quiz', quiz_id=quiz.id) }}"> <img src="{{ url_for('static', filename='/img/icon/edit.ico') }}" alt="Edit Quiz" class="image-button"> </a>
+                </div>
+
+            {% endfor %}
+        {% else %}
+            <p class="no-items-message"> Ingen quizer </p>
+        {% endif %}
+
+        <div class="button-add-container">
+            <a href="{{ url_for('quiz.add_quiz') }}" class="button button-add"> Legg Til </a>
+        </div>
+
+    </section>
+
+    <section>
+
+        <h3 class="section-title"> Mine Spørsmål </h3>
+
+        {% if questions %}
+
+            {% for question in questions %}
+
+                <div class="question-container">
+                    <a href="{{ url_for('quiz.question_details', question_id=question.id) }}" class="question-link"> <span> {{ question.spørsmål }} </span> </a>
+                    <img src="{{ url_for('static', filename='/img/icon/trash.ico') }}" class="image-button" alt="Remove Quiz" onclick="onRemoveQuestionClick({{'"' + url_for('quiz.remove_question', question_id=question.id) + '"' }})">
+                    <a href="{{ url_for('quiz.edit_question', question_id=question.id) }}"> <img src="{{ url_for('static', filename='/img/icon/edit.ico') }}" alt="Edit Question" class="image-button"> </a>
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+            <p class="no-items-message"> Ingen spørsmål </p>
+        {% endif %}
+
+        <div class="button-add-container">
+            <a href="{{ url_for('quiz.add_question') }}" class="button button-add"> Legg Til </a>
+        </div>
+
+    </section>
+
+    <section>
+
+        <h3 class="section-title"> Kategorier </h3>
+
+        {% if categories %}
+
+            {% for category in categories %}
+
+                <div class="category-container">
+                    <span> {{ category.navn }} </span>
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+            <p class="no-items-message"> Ingen kategorier </p>
+        {% endif %}
+
+    </section>
+
+    <form class="add-category-form" action="{{ url_for('quiz.add_category') }}" method="post">
+
+        {{ add_category_form.csrf_token }}
+  
+        <h3 class="title"> Legg til kategori </h3>
+        
+        {{ add_category_form.category_name }}
+        
+        {{ add_category_form.submit }}
+       
+      </form>
+
+{% endblock %}

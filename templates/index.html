@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Hjemmeside {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/choose_user.css') }}">
+
+{% endblock %}
+
+{% block body %}   
+
+    <div class="container">
+        <h2 class="title">Velkommen! Velg bruker</h2>
+
+        <a href="{{ url_for('quizsession.choose_quiz') }}" class="button"> Bruker </a>
+        <a href="{{ url_for('admin.user_login') }}" class="button"> Administrator </a>
+    </div>
+    
+{% endblock %}
