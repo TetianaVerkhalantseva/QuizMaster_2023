@@ -1,6 +1,12 @@
 venv/
-__pycache__/*
+
 __pycache__/
+admin/__pycache__/
+quiz/__pycache__/
+quizsession/__pycache__/
+admin/__pycache__/
+
+txt_info/
 
 .vscode/
 
