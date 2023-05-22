@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from sqlalchemy import func
 
-from models import Quiz, Question, QuestionCategory, AnswerOption, QuestionHasQuiz, QuizSession, db_session
+from models import Quiz, Question, QuestionCategory, AnswerOption, QuestionHasQuiz, db_session
 
 
 quiz = Blueprint("quiz", __name__, template_folder="templates", static_folder="static")
@@ -33,10 +33,10 @@ def remove_quiz(quiz_id):
 
         for record in question_has_quiz_records:
 
-            quiz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
+            # quiz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
 
-            for quiz_session_record in quiz_session_records:
-                db_session.delete(quiz_session_record)
+            # for quiz_session_record in quiz_session_records:
+            #    db_session.delete(quiz_session_record)
 
             db_session.delete(record)
 
@@ -115,10 +115,10 @@ def edit_quiz(quiz_id):
 
             for record in question_has_quiz_records:
 
-                quiz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
+                # quiz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
 
-                for quiz_session_record in quiz_session_records:
-                    db_session.delete(quiz_session_record)
+                # for quiz_session_record in quiz_session_records:
+                #    db_session.delete(quiz_session_record)
 
                 db_session.delete(record)
 
@@ -157,8 +157,8 @@ def question_details(question_id):
 
     answers_details = []
 
-    for answer in answers:
-        answers_details.append({"answer": answer.svar, "correct": answer.korrekt, "number_of_answers": db_session.query(QuizSession).filter_by(svar_id=answer.id).count()})
+    # for answer in answers:
+    #    answers_details.append({"answer": answer.svar, "correct": answer.korrekt, "number_of_answers": db_session.query(QuizSession).filter_by(svar_id=answer.id).count()})
 
     return render_template("quiz/question_details.html", question=question, answers=answers, answers_details=answers_details)
 
@@ -177,10 +177,10 @@ def remove_question(question_id):
 
         for record in question_has_quiz_records:
             
-            qiuz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
+            # qiuz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
 
-            for quiz_session_record in qiuz_session_records:
-                    db_session.delete(quiz_session_record)
+            # for quiz_session_record in qiuz_session_records:
+            #        db_session.delete(quiz_session_record)
 
             db_session.delete(record)
 
@@ -222,19 +222,19 @@ def add_question():
         
         try:
 
-            if len(answers) < 2:
+            if len(answers) == 1:
 
-                flash("Du må ha minst to svaralternativer.", category="error")
+                flash("Spørsmål må ha minst to svaralternativer. Eneste unntak er et type spørsmål (essay).", category="error")
 
                 return render_template("quiz/add_question.html", answers=answers, categories=categories, question=request.form.get("question"), category_id=request.form.get("category-select"))
 
-            if not any([answer["korrekt"] for answer in answers]):
+            if answers and not any([answer["korrekt"] for answer in answers]):
                 
-                flash("Du må ha minst ett korrekt svaralternativ.", category="error")
+                flash("Spørsmål må ha minst ett korrekt svaralternativ.", category="error")
 
                 return render_template("quiz/add_question.html", answers=answers, categories=categories, question=request.form.get("question"), category_id=request.form.get("category-select"))
 
-            question = Question(spørsmål=request.form.get("question"), kategori_id=request.form.get("category-select"), admin_id=current_user.id)
+            question = Question(spørsmål=request.form.get("question"), kategori_id=request.form.get("category-select"), admin_id=current_user.id, riktig_svarpoeng=1)  # TODO add riktig_svarpoeng to form
 
             db_session.add(question)
 
@@ -297,15 +297,15 @@ def edit_question(question_id):
 
         try:
 
-            if len(edited_answers) + len(new_answers) < 2:
+            if len(edited_answers) + len(new_answers) == 1:
 
-                flash("Du må ha minst to svaralternativer.", category="error")
+                flash("Spørsmål må ha minst to svaralternativer. Eneste unntak er et type spørsmål (essay).", category="error")
 
                 return render_template("quiz/edit_question.html", answers=anwers, new_answers=new_answers, categories=categories, question=request.form.get("question"), category_id=request.form.get("category-select"), question_id=question_id)
 
-            if not any([answer["korrekt"] for answer in edited_answers]) and not any([answer["korrekt"] for answer in new_answers]):
+            if (edited_answers or new_answers) and not any([answer["korrekt"] for answer in edited_answers]) and not any([answer["korrekt"] for answer in new_answers]):
 
-                flash("Du må ha minst ett korrekt svaralternativ.", category="error")
+                flash("Spørsmål må ha minst ett korrekt svaralternativ.", category="error")
 
                 return render_template("quiz/edit_question.html", answers=anwers, new_answers=new_answers, categories=categories, question=request.form.get("question"), category_id=request.form.get("category-select"), question_id=question_id)
 
@@ -404,15 +404,15 @@ def remove_answer(answer_id):
 
     question = db_session.query(Question).filter_by(id=awnser.spørsmål_id).first()
 
-    if len(answers) < 2:
+    if len(answers) == 1:
 
-        flash("Du må ha minst to svaralternativer.", category="error")
+        flash("Spørsmål må ha minst to svaralternativer. Eneste unntak er et type spørsmål (essay).", category="error")
 
         return render_template("quiz/edit_question.html", answers=answers, categories=categories, question=question.spørsmål, category_id=question.kategori_id, question_id=question.id)
 
-    if not any([answer.korrekt for answer in answers]):
+    if answers and not any([answer.korrekt for answer in answers]):
 
-        flash("Du må ha minst ett korrekt svaralternativ.", category="error")
+        flash("Spørsmål må ha minst ett korrekt svaralternativ.", category="error")
 
         return render_template("quiz/edit_question.html", answers=answers, categories=categories, question=question.spørsmål, category_id=question.kategori_id, question_id=question.id)
 
