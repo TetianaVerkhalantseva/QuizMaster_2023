@@ -6,7 +6,7 @@ from admin.admin import admin
 from quizsession.quizsession import quizsession
 from quiz.quiz import quiz
 
-from models import Admin, db_session
+from models import User, db_session
 
 import config
 
@@ -27,9 +27,9 @@ login_manager = LoginManager(app)
 @login_manager.user_loader
 def load_user(_id):
 
-    _admin = Admin(id=_id)
+    _admin = User(id=_id)
 
-    _admin.set_info(**db_session.query(Admin).filter_by(id=_id).first().__dict__)
+    _admin.set_info(**db_session.query(User).filter_by(id=_id).first().__dict__)
 
     return _admin
 

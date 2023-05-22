@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash as gph, check_password_hash as cph
 from sqlalchemy.exc import IntegrityError
 
-from models import Admin, Quiz, Question, QuestionCategory, db_session
+from models import User, Quiz, Question, QuestionCategory, db_session
 from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 
@@ -22,7 +22,7 @@ def user_login():
 
         try:
 
-            user = db_session.query(Admin).filter_by(login=login_form.login.data).first()
+            user = db_session.query(User).filter_by(login=login_form.login.data).first()
 
             if not user:
 
@@ -63,11 +63,12 @@ def user_registration():
 
         try:
         
-            user = Admin(
+            user = User(
                 login=registration_form.login.data,
                 fornavn=registration_form.first_name.data,
                 etternavn=registration_form.last_name.data,
-                passord=gph(registration_form.password.data, salt_length=16)
+                passord=gph(registration_form.password.data, salt_length=16),
+                admin=True, student=False  # TODO: Implement logic for student
             )
 
             db_session.add(user)
