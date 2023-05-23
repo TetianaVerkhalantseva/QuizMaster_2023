@@ -14,7 +14,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 INSERT INTO bruker (login, passord, fornavn, etternavn, admin, student) VALUES
-	('Dafna', 'pbkdf2:sha256:260000$jmyidbXptesGMBd0$2369c838eb3974d41aaaed184decfd2febdcbe7059255b05761eb61ab811ffd7', 'Tetiana', 'Dakh', 1, 1), 
+	('Dafna', 'pbkdf2:sha256:260000$4TvdnIt0zGgt7HZq$342dd623b89d3b1850f670339b75fbe3df9ebf4c3123946972092ff462f5ff4e', 'Tetiana', 'Dakh', 1, 1), 
     ('ylu002@uit.no', 'pbkdf2:sha256:260000$2OdEg0WIyuBjEKka$9d6d1f0e745fd94e65f20aa2ce5ea5b476a414d7038f66964406ceb81635b432', 'Yue', 'Luo', 1, 0);
 
  
