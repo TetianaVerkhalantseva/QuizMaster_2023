@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Quiz {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/quiz_result.css') }}">
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ super() }}
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="text/javascript">
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var data = google.visualization.arrayToDataTable([
+                ['Svar Resultat', 'Svar'],
+                ['Korrekt ({{ correct }})', {{ correct }}],
+                ['Spesielt Riktig ({{ particulary_correct }})', {{ particulary_correct }}],
+                ['Feil ({{ incorrect }})', {{ incorrect }}],
+                ['Ikke Besvart ({{ not_answered }})', {{ not_answered }}]
+            ]);
+
+            var options = {
+                title: 'Quiz Resultat',
+                is3D: true,
+                backgroundColor: '#F4F4F4',
+                colors: ['#4CAF50', '#FFEB3B', '#F44336', '#4C50AF']
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        <h2 class="title"> {{ quiz.navn }} </h2>
+
+        <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
+
+        <div id="piechart" style="width: 900px; height: 500px;"></div>
+
+        <form action="{{ url_for('quizsession.quiz_result_details', quiz_id=quiz.id) }}" method="post">
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+            <input type="hidden" name="quiz_result" value="{{ result }}"/>
+
+            <input type="submit" value="Se Detaljer" class="button"/>
+
+        </form>
+
+        <a href="{{ url_for('quizsession.choose_quiz') }}" class="button"> Velg Quiz </a>
+
+    </div>
+
+{% endblock %}

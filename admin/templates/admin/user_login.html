@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Administrator logg inn {% endblock %}
+
+{% block stylesheets %}
+
+  {{ super() }}
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/login_registration.css') }}">
+
+{% endblock %}
+
+{% block body %} 
+
+  <form class="login-form" action="{{ url_for('admin.user_login') }}" method="post">
+
+      {{ login_form.csrf_token }}
+
+      <h2 class="title"> Logg Inn </h2>
+
+      <table class="table">
+
+        <tr>
+          <td> Pålogging: </td>
+          <td> {{ login_form.login }} </td>
+        </tr>
+
+        <tr>
+          <td> Passord: </td>
+          <td> {{ login_form.password }} </td>
+        </tr>
+
+        <tr>
+          <td><a href="{{ url_for('index') }}" class="button">Tilbake</a></td>
+          <td> {{ login_form.submit }} </td>
+        </tr>
+
+      </table>
+
+      <a href="{{ url_for('admin.user_registration') }}"> Har du ikke en konto? Registrere </a>
+
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="flash {{ category }}"> {{ message }} </div>
+      {% endfor %}
+
+    </form>
+
+{% endblock %}
