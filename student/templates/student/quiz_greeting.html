@@ -18,9 +18,9 @@
         <h2 class="quiz-name"> {{ quiz.navn }} </h2>
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
 
-        <a href="{{ url_for('quizsession.quiz', quiz_id=quiz.id) }}" class="start-quiz-button">Start quiz</a>
+        <a href="{{ url_for('student.quiz', quiz_id=quiz.id) }}" class="start-quiz-button">Start quiz</a>
         <br>
-        <a href="{{ url_for('quizsession.choose_quiz') }}" class="tikbake-button">Tilbake</a>
+        <a href="{{ url_for('student.choose_quiz') }}" class="tikbake-button">Tilbake</a>
 
     </div>
 
