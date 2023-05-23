@@ -74,6 +74,41 @@ class QuestionHasQuiz(base):
     spørsmål = relationship('Question')
     quiz = relationship('Quiz')
 
+
+class QuizSession(base):
+    __tablename__ = 'quiz_sesjon'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quiz_id = Column(Integer, ForeignKey('quiz.id'), nullable=False)
+    student_id = Column(Integer, ForeignKey('bruker.id'), nullable=False)
+    godkjent = Column(Boolean, nullable=True)
+
+
+class QuizSessionAnswer(base):
+    __tablename__ = 'quiz_sesjon_svar'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quiz_sesjon_id = Column(Integer, ForeignKey('quiz_sesjon.id'), nullable=False)
+    spørsmål_id = Column(Integer, ForeignKey('spørsmål.id'), nullable=False)
+    svarmulighet_id = Column(Integer, ForeignKey('svarmulighet.id'), nullable=True)
+    tekstsvar = Column(Text(1000), nullable=True)
+    godkjent = Column(Boolean, nullable=True)
+
+
+class QuizComment(base):
+    __tablename__ = 'quiz_kommentar'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quiz_sesjon_id = Column(Integer, ForeignKey('quiz_sesjon.id'), nullable=False)
+    bruker_id = Column(Integer, ForeignKey('bruker.id'), nullable=True)
+    tekst = Column(Text(1000), nullable=False)
+
+
+class AnswerComment(base):
+    __tablename__ = 'svar_kommentar'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    quiz_sesjon_svar_id = Column(Integer, ForeignKey('quiz_sesjon_svar.id'), nullable=False)
+    bruker_id = Column(Integer, ForeignKey('bruker.id'), nullable=True)
+    tekst = Column(Text(1000), nullable=False)
+
+
 base.metadata.create_all(engine)
 
 db_session = sessionmaker()(bind=engine)

@@ -58,7 +58,7 @@
 
         <div id="piechart" style="width: 900px; height: 500px;"></div>
 
-        <form action="{{ url_for('quizsession.quiz_result_details', quiz_id=quiz.id) }}" method="post">
+        <form action="{{ url_for('student.quiz_result_details', quiz_id=quiz.id) }}" method="post">
 
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
@@ -68,7 +68,7 @@
 
         </form>
 
-        <a href="{{ url_for('quizsession.choose_quiz') }}" class="button"> Velg Quiz </a>
+        <a href="{{ url_for('student.choose_quiz') }}" class="button"> Velg Quiz </a>
 
     </div>
 

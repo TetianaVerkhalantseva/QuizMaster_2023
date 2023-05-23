@@ -7,10 +7,10 @@ from utils import parse_quiz_form_data
 
 import ast
 
-quizsession = Blueprint("quizsession", __name__, template_folder="templates", static_folder="static")
+student = Blueprint("student", __name__, template_folder="templates", static_folder="static")
 
 
-@quizsession.route("/choose-quiz")
+@student.route("/choose-quiz")
 def choose_quiz():
 
     quizzes = (
@@ -35,18 +35,18 @@ def choose_quiz():
         quizzes
     ))
 
-    return render_template("quizsession/choose_quiz.html", quizzes=quizzes)
+    return render_template("student/choose_quiz.html", quizzes=quizzes)
 
 
-@quizsession.route("/quiz-greeting/<int:quiz_id>")
+@student.route("/quiz-greeting/<int:quiz_id>")
 def quiz_greeting(quiz_id):
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
 
-    return render_template("quizsession/quiz_greeting.html", quiz=quiz)
+    return render_template("student/quiz_greeting.html", quiz=quiz)
 
 
-@quizsession.route("/quiz/<int:quiz_id>", methods=["GET", "POST"])
+@student.route("/quiz/<int:quiz_id>", methods=["GET", "POST"])
 def quiz(quiz_id):
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
@@ -112,7 +112,7 @@ def quiz(quiz_id):
         session.modified = True
 
         return render_template(
-            "quizsession/quiz_result.html",
+            "student/quiz_result.html",
             quiz=quiz,
             correct=len(list(filter(lambda question: question['correct'], result.values()))),
             particulary_correct=len(list(filter(lambda question: question['particulary_correct'], result.values()))),
@@ -121,10 +121,10 @@ def quiz(quiz_id):
             result=str(result)
         )
 
-    return render_template("quizsession/quiz.html", quiz=quiz, questions=questions)
+    return render_template("student/quiz.html", quiz=quiz, questions=questions)
 
 
-@quizsession.route("/quiz-result-details/<int:quiz_id>", methods=["POST"])
+@student.route("/quiz-result-details/<int:quiz_id>", methods=["POST"])
 def quiz_result_details(quiz_id):
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
@@ -164,4 +164,4 @@ def quiz_result_details(quiz_id):
             
         questions.append(question_data)
 
-    return render_template("quizsession/quiz_result_details.html", quiz=quiz, questions=questions, result=ast.literal_eval(request.form['quiz_result']))
+    return render_template("student/quiz_result_details.html", quiz=quiz, questions=questions, result=ast.literal_eval(request.form['quiz_result']))
