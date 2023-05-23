@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Administrator registrering {% endblock %}
+
+{% block stylesheets %}
+
+  {{ super() }}
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/login_registration.css') }}">
+
+{% endblock %}
+
+{% block body %} 
+
+  <form class="registration-form" action="{{ url_for('admin.user_registration') }}" method="post">
+
+      {{ registration_form.csrf_token }}
+
+      <h2 class="title"> Registrering </h2>
+
+      <table class="table">
+
+        <tr>
+          <td> Pålogging: </td>
+          <td> {{ registration_form.login }} </td>
+        </tr>
+
+        <tr>
+          <td> Fornavn: </td>
+          <td> {{ registration_form.first_name }} </td>
+        </tr>
+
+        <tr>
+          <td> Etternavn: </td>
+          <td> {{ registration_form.last_name }} </td>
+        </tr>
+
+        <tr>
+          <td> Passord: </td>
+          <td> {{ registration_form.password }} </td>
+        </tr>
+
+        <tr>
+          <td> Passord bekreftelse: </td>
+          <td> {{ registration_form.password_confirm }} </td>
+        </tr>
+
+        <tr>
+          <td><a href="{{ url_for('index') }}" class="button">Tilbake</a></td>
+          <td> {{ registration_form.submit }} </td>
+        </tr>
+
+      </table>
+
+      <a href="{{ url_for('admin.user_login') }}"> Har du en konto? Logg inn </a>
+
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <div class="flash {{ category }}"> {{ message }} </div>
+        {% endfor %}
+
+    </form>
+
+{% endblock %}

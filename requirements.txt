@@ -1,0 +1,9 @@
+flask==2.2.3 
+mariadb==1.1.6
+mysql==0.0.3
+mysqlclient==2.1.1
+WTForms==3.0.1
+Flask-SQLAlchemy==3.0.3
+Flask-Login==0.6.2
+PyMySQL==1.0.3
+flask-wtf==0.15.1
