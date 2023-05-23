@@ -1,0 +1,40 @@
+{% extends 'quiz/admin_header.html' %}
+
+
+{% block title %} Quiz Detaljer {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/quiz_details.css') }}">
+
+{% endblock %}
+
+{% block header_title %} Quiz Detaljer {% endblock %}
+
+{% block body %}
+
+    {{ super() }}
+
+    <h2 class="quiz-title"> {{ quiz.navn }} </h2>
+
+    <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
+
+    <div class="quiz-questions-container">
+
+        {% for question in questions %}
+
+            <div class="question-container">
+                <span> {{ question.spørsmål }} </span>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <a href="{{ url_for('admin.admin_profile') }}" class="button button-block"> Administrator Profil </a>
+
+    <a href="{{ url_for('quiz.edit_quiz', quiz_id=quiz.id) }}" class="button button-block"> Redigere </a>
+
+{% endblock %}
