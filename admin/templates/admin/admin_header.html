@@ -25,15 +25,6 @@
 
     </header>
 
-    <nav class="navbar">
-
-        <ul>
-            <li> <a href="{{ url_for('admin.admin_profile') }}"> Hjem </a> </li>
-            <li> <a href="#"> Vurderinger </a> </li>
-        </ul>
-
-    </nav>
-
     <div class="wrapper">
 
         {% for category, message in get_flashed_messages(with_categories=true) %}

@@ -3,7 +3,7 @@ from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
 
 from admin.admin import admin
-from student.student import student
+from quizsession.quizsession import quizsession
 from quiz.quiz import quiz
 
 from models import User, db_session
@@ -18,7 +18,7 @@ csrf = CSRFProtect(app)
 app.config.from_object(config.DevelopmentConfig)
 
 app.register_blueprint(admin, url_prefix="/admin")
-app.register_blueprint(student, url_prefix="/student")
+app.register_blueprint(quizsession, url_prefix="/quizsession")
 app.register_blueprint(quiz, url_prefix="/quiz")
 
 login_manager = LoginManager(app)
