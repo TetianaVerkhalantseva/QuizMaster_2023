@@ -7,7 +7,7 @@
 
     {{ super() }}
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/student_registration.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/login_registration.css') }}">
 
 {% endblock %}
 
@@ -36,6 +36,11 @@
                 <td>{{ form.last_name }}</td>
             </tr>
 
+            <tr>
+                <td> Brukernavn: </td>
+                <td> {{ form.login }} </td>
+            </tr>
+            
             <tr>
                 <td> Passord: </td>
                 <td>{{ form.password }}</td>
