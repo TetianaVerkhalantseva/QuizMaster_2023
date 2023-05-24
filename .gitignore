@@ -1,4 +1,5 @@
 venv/
+.venv/
 
 __pycache__
 admin/__pycache__
@@ -14,4 +15,3 @@ txt_info/
 .DS_Store/
 config.py
 
-test!
