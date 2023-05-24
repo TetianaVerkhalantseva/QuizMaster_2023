@@ -26,7 +26,6 @@ class User(base, UserMixin):
     etternavn = Column(String(50), nullable=True)
 
     admin = Column(Boolean, nullable=False)
-    student = Column(Boolean, nullable=False)
 
 
 class Quiz(base):
@@ -50,7 +49,6 @@ class Question(base):
     spørsmål = Column(Text(500), nullable=False)
     kategori_id = Column(Integer, ForeignKey('spørsmålskategori.id'), nullable=False)
     admin_id = Column(Integer, ForeignKey('bruker.id'), nullable=False)
-    riktig_svarpoeng = Column(Float, nullable=False)
 
     kategori = relationship('QuestionCategory')
     admin = relationship('User')
@@ -80,7 +78,7 @@ class QuizSession(base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     quiz_id = Column(Integer, ForeignKey('quiz.id'), nullable=False)
     student_id = Column(Integer, ForeignKey('bruker.id'), nullable=False)
-    godkjent = Column(Boolean, nullable=True)
+    godkjent = Column(Boolean, nullable=False)
 
 
 class QuizSessionAnswer(base):
@@ -90,7 +88,7 @@ class QuizSessionAnswer(base):
     spørsmål_id = Column(Integer, ForeignKey('spørsmål.id'), nullable=False)
     svarmulighet_id = Column(Integer, ForeignKey('svarmulighet.id'), nullable=True)
     tekstsvar = Column(Text(1000), nullable=True)
-    godkjent = Column(Boolean, nullable=True)
+    godkjent = Column(Boolean, nullable=False)
 
 
 class QuizComment(base):

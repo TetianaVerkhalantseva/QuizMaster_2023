@@ -68,7 +68,7 @@ def user_registration():
                 fornavn=registration_form.first_name.data,
                 etternavn=registration_form.last_name.data,
                 passord=gph(registration_form.password.data, salt_length=16),
-                admin=True, student=False  # TODO: Implement logic for student
+                admin=True
             )
 
             db_session.add(user)
