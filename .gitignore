@@ -1,5 +1,5 @@
 venv/
-
+.venv
 __pycache__
 admin/__pycache__
 quiz/__pycache__
