@@ -18,6 +18,47 @@ from werkzeug.security import generate_password_hash as gph, check_password_hash
 student = Blueprint("student", __name__, template_folder="templates", static_folder="static")
 
 
+@student.route("/student-login", methods=["GET", "POST"])
+def student_login():
+
+    if current_user.is_authenticated:
+        return redirect(url_for("student.student_profile"))
+
+    login_form = LoginForm()
+
+    if login_form.validate_on_submit():
+
+        try:
+
+            user = db_session.query(User).filter_by(login=login_form.login.data).first()
+
+            if not user:
+
+                flash(f"Det finnes ingen bruker med påloggingen '{login_form.login.data}'.", category="error")
+
+                return redirect(url_for("student.student_login"))
+
+            if not cph(user.passord, login_form.password.data):
+
+                flash(f"Feil passord for påloggingen '{login_form.login.data}'.", category="error")
+
+                return redirect(url_for("student.student_login"))
+
+            login_user(user)
+
+            flash(f"Velkommen {user.login}!", category="success")
+
+            return redirect(url_for("student.student_profile"))
+
+        except Exception as exception:
+
+            flash(f"{type(exception).__name__}: {exception}", category="error")
+
+            return redirect(url_for("student.student_login"))
+
+    return render_template("student/student_login.html", login_form=login_form)
+
+
 @student.route("/student-registration", methods=['POST', 'GET'])
 def student_registration():
 
@@ -217,7 +258,7 @@ def quiz_result_details(quiz_id):
 
 @student.route("/student-logout")
 @login_required
-def user_logout():
+def student_logout():
 
     logout_user()
 

@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 
-{% block title %} Administrator registrering {% endblock %}
+{% block title %} Student registrering {% endblock %}
 
 {% block stylesheets %}
 
     {{ super() }}
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/student_registration.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/login_registration.css') }}">
 
 {% endblock %}
 
@@ -22,11 +22,6 @@
         <table class="table">
 
             <tr>
-                <td> Pålogging: </td>
-                <td> {{ form.login }} </td>
-            </tr>
-
-            <tr>
                 <td> Fornavn: </td>
                 <td> {{ form.first_name }} </td>
             </tr>
@@ -36,6 +31,11 @@
                 <td> {{ form.last_name }} </td>
             </tr>
 
+            <tr>
+                <td> Brukernavn: </td>
+                <td> {{ form.login }} </td>
+            </tr>
+            
             <tr>
                 <td> Passord: </td>
                 <td> {{ form.password }} </td>
