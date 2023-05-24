@@ -130,6 +130,7 @@ def student_profile():
 
 
 @student.route("/choose-quiz")
+@login_required
 def choose_quiz():
 
     quizzes = (
@@ -158,6 +159,7 @@ def choose_quiz():
 
 
 @student.route("/quiz-greeting/<int:quiz_id>")
+@login_required
 def quiz_greeting(quiz_id):
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
@@ -166,6 +168,7 @@ def quiz_greeting(quiz_id):
 
 
 @student.route("/quiz/<int:quiz_id>", methods=["GET", "POST"])
+@login_required
 def quiz(quiz_id):
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
@@ -244,6 +247,7 @@ def quiz(quiz_id):
 
 
 @student.route("/quiz-result-details/<int:quiz_id>", methods=["POST"])
+@login_required
 def quiz_result_details(quiz_id):
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
