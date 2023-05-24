@@ -3,7 +3,7 @@ venv/
 __pycache__/
 admin/__pycache__/
 quiz/__pycache__/
-quizsession/__pycache__/
+student/__pycache__/
 admin/__pycache__/
 
 txt_info/
