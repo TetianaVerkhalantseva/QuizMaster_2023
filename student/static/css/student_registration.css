@@ -1,0 +1,42 @@
+body {
+    background-color: #fff;
+    color: #000;
+    font: bold 16px "Consolas", "Microsoft YaHei", sans-serif;
+    line-height: 1.5em;
+    text-align: center;
+}
+
+.table {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+tr {
+    padding: 20px;
+}
+
+
+.title {
+    font: bold 30px "Microsoft YaHei", sans-serif;
+}
+
+.login-form, .registration-form {
+    margin-top: 100px;
+}
+
+.login-form input[type="submit"], .registration-form input[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    padding: 5px 20px;
+    font: bold 12px "Microsoft YaHei", sans-serif;
+    margin: 20px;
+}
+
+.login-form input[type="submit"]:hover, .registration-form input[type="submit"]:hover {
+    cursor: pointer;
+    background-color: red;
+    color: #fff;
+}
