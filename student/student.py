@@ -8,11 +8,13 @@ from utils import parse_quiz_form_data
 import ast
 
 from flask_login import login_user, logout_user, login_required, current_user
-from forms import LoginForm, RegistrationForm
+from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 from models import User, Quiz, Question, QuestionCategory, db_session
 
 from werkzeug.security import generate_password_hash as gph, check_password_hash as cph
+
+from sqlalchemy.exc import IntegrityError
 
 
 student = Blueprint("student", __name__, template_folder="templates", static_folder="static")
@@ -62,20 +64,20 @@ def student_login():
 @student.route("/student-registration", methods=['POST', 'GET'])
 def student_registration():
 
-    if request.method == 'get':
-        return render_template("student_registration.html")
+    if current_user.is_authenticated:
+        return redirect(url_for("student.student_profile"))
     
-    else:
-        form = RegistrationForm()
+    form = RegistrationForm()
 
-        if form.validate_on_submit():
+    if form.validate_on_submit():
+
+        try:
             student = User(
                 login = form.login.data,
                 fornavn = form.first_name.data,
                 etternavn = form.last_name.data,
                 password = gph(form.password.data, salt_length=16),
-                admin = False, 
-                student= True
+                admin = False
             )
 
             db_session.add(student)
@@ -86,18 +88,45 @@ def student_registration():
             flash(f"velkommen {student.fornavn} {student.etternavn}!", category="success")
 
             return redirect(url_for("student.student_profile"))
+        
+        except IntegrityError:
+            
+            db_session.rollback()
 
-        else:
-            for message in form.messages:
-                flash(message)
+            flash(f"Det finnes allerede en bruker med påloggingen '{form.username.data}'.", category="error")
+
+            return redirect(url_for("admin.admin_registration"))
+        
+        except Exception as exception:
+
+            flash(f"{type(exception).__name__}: {exception}", category="error")
+
             return redirect(url_for("student.student_registration"))
+
+    elif request.method == 'POST':
+
+        if 'password_confirm' in form.errors:
+            flash("Passordene må være like!", category="error")
+        else:
+            flash(str(form.errors), category="error")
+    
+    return render_template("student/student_registration.html", form=form)
     
 
 @student.route("/student-profile")
 @login_required
 def student_profile():
     
-    pass
+    quizzes = db_session.query(Quiz).filter_by(admin_id=current_user['id']).all()
+
+    questions = db_session.query(Question).filter_by(admin_id=current_user['id']).all()
+
+    categories = db_session.query(QuestionCategory).all()
+
+    add_category_form = AddCategoryForm()
+
+    #Not finished yet
+    return render_template("student/student_profile.html")
 
 
 @student.route("/choose-quiz")

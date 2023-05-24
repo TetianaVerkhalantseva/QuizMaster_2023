@@ -22,13 +22,18 @@
         <table class="table">
 
             <tr>
+                <td> Pålogging: </td>
+                <td>{{ form.login }}</td>
+            </tr>
+
+            <tr>
                 <td> Fornavn: </td>
-                <td> {{ form.first_name }} </td>
+                <td>{{ form.first_name }}</td>
             </tr>
 
             <tr>
                 <td> Etternavn: </td>
-                <td> {{ form.last_name }} </td>
+                <td>{{ form.last_name }}</td>
             </tr>
 
             <tr>
@@ -38,34 +43,27 @@
             
             <tr>
                 <td> Passord: </td>
-                <td> {{ form.password }} </td>
+                <td>{{ form.password }}</td>
             </tr>
 
             <tr>
                 <td> Passord bekreftelse: </td>
-                <td> {{ form.password_confirm }} </td>
+                <td>{{ form.password_confirm }}</td>
             </tr>
 
             <tr>
                 <td><a href="{{ url_for('index') }}" class="button">Tilbake</a></td>
-                <td> {{ form.submit }} </td>
+                <td>{{ form.submit }}</td>
             </tr>
 
         </table>
 
         <a href="{{ url_for('student.student_login') }}"> Har du en konto? Logg inn </a>
 
-        <div class="message-group">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
-        </div>
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <div class="flash {{ category }}"> {{ message }} </div>
+        {% endfor %}
+
     </form>
 
 {% endblock %}
