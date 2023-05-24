@@ -11,7 +11,7 @@ admin = Blueprint("admin", __name__, template_folder="templates", static_folder=
 
 
 @admin.route("/user-login", methods=["GET", "POST"])
-def user_login():
+def admin_login():
 
     if current_user.is_authenticated:
         return redirect(url_for("admin.admin_profile"))
@@ -28,13 +28,13 @@ def user_login():
 
                 flash(f"Det finnes ingen bruker med påloggingen '{login_form.login.data}'.", category="error")
 
-                return redirect(url_for("admin.user_login"))
+                return redirect(url_for("admin.admin_login"))
 
             if not cph(user.passord, login_form.password.data):
 
                 flash(f"Feil passord for påloggingen '{login_form.login.data}'.", category="error")
 
-                return redirect(url_for("admin.user_login"))
+                return redirect(url_for("admin.admin_login"))
 
             login_user(user)
 
@@ -46,13 +46,13 @@ def user_login():
 
             flash(f"{type(exception).__name__}: {exception}", category="error")
 
-            return redirect(url_for("admin.user_login"))
+            return redirect(url_for("admin.admin_login"))
 
-    return render_template("admin/user_login.html", login_form=login_form)
+    return render_template("admin/admin_login.html", login_form=login_form)
 
 
 @admin.route("/user-registration", methods=["GET", "POST"])
-def user_registration():
+def admin_registration():
 
     if current_user.is_authenticated:
         return redirect(url_for("admin.admin_profile"))
@@ -87,13 +87,13 @@ def user_registration():
 
             flash(f"Det finnes allerede en bruker med påloggingen '{registration_form.login.data}'.", category="error")
 
-            return redirect(url_for("admin.user_registration"))
+            return redirect(url_for("admin.admin_registration"))
 
         except Exception as exception:
 
             flash(f"{type(exception).__name__}: {exception}", category="error")
 
-            return redirect(url_for("admin.user_registration"))
+            return redirect(url_for("admin.admin_registration"))
 
     elif request.method == "POST":
         
@@ -102,9 +102,9 @@ def user_registration():
         else:
             flash(str(registration_form.errors), category="error")
         
-        return redirect(url_for("admin.user_registration"))
+        return redirect(url_for("admin.admin_registration"))
 
-    return render_template("admin/user_registration.html", registration_form=registration_form)
+    return render_template("admin/admin_registration.html", registration_form=registration_form)
 
 
 @admin.route("/admin-profile")
