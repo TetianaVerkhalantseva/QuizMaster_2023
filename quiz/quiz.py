@@ -234,7 +234,7 @@ def add_question():
 
                 return render_template("quiz/add_question.html", answers=answers, categories=categories, question=request.form.get("question"), category_id=request.form.get("category-select"))
 
-            question = Question(spørsmål=request.form.get("question"), kategori_id=request.form.get("category-select"), admin_id=current_user.id, riktig_svarpoeng=1)  # TODO add riktig_svarpoeng to form
+            question = Question(spørsmål=request.form.get("question"), kategori_id=request.form.get("category-select"), admin_id=current_user.id)
 
             db_session.add(question)
 

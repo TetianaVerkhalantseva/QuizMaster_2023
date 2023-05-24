@@ -19,11 +19,20 @@
 
             <p> @{{ current_user['login'] }} </p>
 
-            <a href="{{ url_for('admin.user_logout') }}"> Logg ut </a>
+            <a href="{{ url_for('admin.admin_logout') }}"> Logg ut </a>
 
         </div>
 
     </header>
+
+    <nav class="navbar">
+
+        <ul>
+            <li> <a href="{{ url_for('admin.admin_profile') }}"> Hjem </a> </li>
+            <li> <a href="#"> Vurderinger </a> </li>
+        </ul>
+
+    </nav>
 
     <div class="wrapper">
 

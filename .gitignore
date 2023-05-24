@@ -1,10 +1,11 @@
 venv/
+.venv/
 
-__pycache__/
-admin/__pycache__/
-quiz/__pycache__/
-quizsession/__pycache__/
-admin/__pycache__/
+__pycache__
+admin/__pycache__
+quiz/__pycache__
+student/__pycache__
+admin/__pycache__
 
 txt_info/
 
@@ -12,3 +13,5 @@ txt_info/
 
 .DS_Store
 .DS_Store/
+config.py
+
