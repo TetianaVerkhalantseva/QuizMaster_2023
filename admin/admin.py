@@ -10,7 +10,7 @@ from forms import LoginForm, RegistrationForm, AddCategoryForm
 admin = Blueprint("admin", __name__, template_folder="templates", static_folder="static")
 
 
-@admin.route("/user-login", methods=["GET", "POST"])
+@admin.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
 
     if current_user.is_authenticated:
@@ -51,7 +51,7 @@ def admin_login():
     return render_template("admin/admin_login.html", login_form=login_form)
 
 
-@admin.route("/user-registration", methods=["GET", "POST"])
+@admin.route("/admin-registration", methods=["GET", "POST"])
 def admin_registration():
 
     if current_user.is_authenticated:
@@ -122,7 +122,7 @@ def admin_profile():
     return render_template("admin/admin_profile.html", quizzes=quizzes, questions=questions, categories=categories, add_category_form=add_category_form)
 
 
-@admin.route("/user-logout")
+@admin.route("/admin-logout")
 @login_required
 def user_logout():
 
