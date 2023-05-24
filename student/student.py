@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session
+from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
@@ -7,7 +7,56 @@ from utils import parse_quiz_form_data
 
 import ast
 
+from flask_login import login_user, logout_user, login_required, current_user
+from forms import LoginForm, RegistrationForm
+
+from models import User, Quiz, Question, QuestionCategory, db_session
+
+from werkzeug.security import generate_password_hash as gph, check_password_hash as cph
+
+
 student = Blueprint("student", __name__, template_folder="templates", static_folder="static")
+
+
+@student.route("/student-registration", methods=['POST', 'GET'])
+def student_registration():
+
+    if request.method == 'get':
+        return render_template("student_registration.html")
+    
+    else:
+        form = RegistrationForm()
+
+        if form.validate_on_submit():
+            student = User(
+                login = form.login.data,
+                fornavn = form.first_name.data,
+                etternavn = form.last_name.data,
+                password = gph(form.password.data, salt_length=16),
+                admin = False, 
+                student= True
+            )
+
+            db_session.add(student)
+            db_session.commit()
+
+            login_user(student)
+
+            flash(f"velkommen {student.fornavn} {student.etternavn}!", category="success")
+
+            return redirect(url_for("student.student_profile"))
+
+        else:
+            for message in form.messages:
+                flash(message)
+            return redirect(url_for("student.student_registration"))
+    
+
+@student.route("/student-profile")
+@login_required
+def student_profile():
+    
+    pass
 
 
 @student.route("/choose-quiz")
@@ -165,3 +214,11 @@ def quiz_result_details(quiz_id):
         questions.append(question_data)
 
     return render_template("student/quiz_result_details.html", quiz=quiz, questions=questions, result=ast.literal_eval(request.form['quiz_result']))
+
+@student.route("/student-logout")
+@login_required
+def user_logout():
+
+    logout_user()
+
+    return redirect(url_for("index"))
