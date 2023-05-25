@@ -22,11 +22,6 @@
       <table class="table">
 
         <tr>
-          <td> Pålogging: </td>
-          <td> {{ registration_form.login }} </td>
-        </tr>
-
-        <tr>
           <td> Fornavn: </td>
           <td> {{ registration_form.first_name }} </td>
         </tr>
@@ -37,12 +32,17 @@
         </tr>
 
         <tr>
+          <td> Brukernavn: </td>
+          <td> {{ registration_form.login }} </td>
+        </tr>
+        
+        <tr>
           <td> Passord: </td>
           <td> {{ registration_form.password }} </td>
         </tr>
 
         <tr>
-          <td> Passord bekreftelse: </td>
+          <td> Bekreft passord: </td>
           <td> {{ registration_form.password_confirm }} </td>
         </tr>
 
