@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash as gph, check_password_hash as cph
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
-from models import User, Quiz, Question, QuestionCategory, db_session
+from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session
 from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 
@@ -14,7 +15,11 @@ admin = Blueprint("admin", __name__, template_folder="templates", static_folder=
 def admin_login():
 
     if current_user.is_authenticated:
-        return redirect(url_for("admin.admin_profile"))
+
+        if current_user['admin']:
+            return redirect(url_for("admin.admin_profile"))
+        else:
+            return redirect(url_for("student.student_profile"))
 
     login_form = LoginForm()
 
@@ -22,17 +27,17 @@ def admin_login():
 
         try:
 
-            user = db_session.query(User).filter_by(login=login_form.login.data).first()
+            user = db_session.query(User).filter_by(login=login_form.login.data).filter_by(admin=True).first()
 
             if not user:
 
-                flash(f"Det finnes ingen bruker med påloggingen '{login_form.login.data}'.", category="error")
+                flash(f"Det finnes ingen admin bruker med brukernavn '{login_form.login.data}'.", category="error")
 
                 return redirect(url_for("admin.admin_login"))
 
             if not cph(user.passord, login_form.password.data):
 
-                flash(f"Feil passord for påloggingen '{login_form.login.data}'.", category="error")
+                flash(f"Feil passord for brukernavn '{login_form.login.data}'.", category="error")
 
                 return redirect(url_for("admin.admin_login"))
 
@@ -55,7 +60,11 @@ def admin_login():
 def admin_registration():
 
     if current_user.is_authenticated:
-        return redirect(url_for("admin.admin_profile"))
+
+        if current_user['admin']:
+            return redirect(url_for("admin.admin_profile"))
+        else:
+            return redirect(url_for("student.student_profile"))
 
     registration_form = RegistrationForm()
 
@@ -85,7 +94,7 @@ def admin_registration():
 
             db_session.rollback()
 
-            flash(f"Det finnes allerede en bruker med påloggingen '{registration_form.login.data}'.", category="error")
+            flash(f"Det finnes allerede en bruker med brukernavn '{registration_form.login.data}'.", category="error")
 
             return redirect(url_for("admin.admin_registration"))
 
@@ -111,6 +120,9 @@ def admin_registration():
 @login_required
 def admin_profile():
 
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
     quizzes = db_session.query(Quiz).filter_by(admin_id=current_user['id']).all()
 
     questions = db_session.query(Question).filter_by(admin_id=current_user['id']).all()
@@ -122,9 +134,47 @@ def admin_profile():
     return render_template("admin/admin_profile.html", quizzes=quizzes, questions=questions, categories=categories, add_category_form=add_category_form)
 
 
+@admin.route("/assessment")
+@login_required
+def assessment():
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
+    quiz_sessions = (
+        db_session.query(
+            QuizSession.id,
+            QuizSession.godkjent,
+            Quiz.navn,
+            Quiz.beskrivelse,
+            func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
+            func.group_concat(QuestionCategory.navn, ',').label('categories'),
+            Quiz.admin_id
+        ).join(Quiz, QuizSession.quiz_id == Quiz.id)
+        .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
+        .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
+        .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
+        .group_by(QuizSession.id)
+        .all()
+    )
+
+    quiz_sessions = list(filter(lambda qs: qs['admin_id'] == current_user['id'], map(
+        lambda row: {
+            'id': row[0], 'approved': row[1], 'name': row[2], 'description': row[3], 'number_of_questions': row[4],
+            'categories': list(set(filter(bool, row[5].split(',')))), 'admin_id': row[6]
+        },
+        quiz_sessions
+    )))
+
+    return render_template("admin/assessment.html", quiz_sessions=quiz_sessions)
+
+
 @admin.route("/admin-logout")
 @login_required
 def admin_logout():
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     logout_user()
 
