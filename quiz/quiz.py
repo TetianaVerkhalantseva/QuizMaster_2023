@@ -12,6 +12,9 @@ quiz = Blueprint("quiz", __name__, template_folder="templates", static_folder="s
 @login_required
 def quiz_details(quiz_id):
 
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
     _quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
     
     question_ids = [record.spørsmål_id for record in db_session.query(QuestionHasQuiz).filter_by(quiz_id=quiz_id).all()]
@@ -24,6 +27,9 @@ def quiz_details(quiz_id):
 @quiz.route("/remove-quiz/<int:quiz_id>")
 @login_required
 def remove_quiz(quiz_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     try:
 
@@ -53,6 +59,9 @@ def remove_quiz(quiz_id):
 @quiz.route("/add-quiz", methods=["GET", "POST"])
 @login_required
 def add_quiz():
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     questions = db_session.query(Question).filter_by(admin_id=current_user.id).all()
 
@@ -92,6 +101,9 @@ def add_quiz():
 @quiz.route("/edit-quiz/<int:quiz_id>", methods=["GET", "POST"])
 @login_required
 def edit_quiz(quiz_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     _quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
     questions = db_session.query(Question).filter_by(admin_id=current_user.id).all()
@@ -146,6 +158,9 @@ def edit_quiz(quiz_id):
 @login_required
 def question_details(question_id):
 
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
     question = db_session.query(Question).filter_by(id=question_id).first()
 
     answers = db_session.query(AnswerOption).filter_by(spørsmål_id=question_id).all()
@@ -161,6 +176,9 @@ def question_details(question_id):
 @quiz.route("/remove-question/<int:question_id>")
 @login_required
 def remove_question(question_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
     
     try:
         
@@ -200,6 +218,9 @@ def remove_question(question_id):
 @quiz.route("/add-question", methods=["GET", "POST"])
 @login_required
 def add_question():
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     categories = db_session.query(QuestionCategory).all()
 
@@ -259,6 +280,9 @@ def add_question():
 @quiz.route("/edit-question/<int:question_id>", methods=["GET", "POST"])
 @login_required
 def edit_question(question_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     categories = db_session.query(QuestionCategory).all()
 
@@ -345,6 +369,9 @@ def edit_question(question_id):
 @login_required
 def add_answer():
 
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
     categories = db_session.query(QuestionCategory).all()
 
     answers = []
@@ -365,6 +392,9 @@ def add_answer():
 @quiz.route("/add-answer-for-edit/<int:question_id>", methods=["POST"])
 @login_required
 def add_answer_for_edit(question_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     categories = db_session.query(QuestionCategory).all()
 
@@ -390,6 +420,9 @@ def add_answer_for_edit(question_id):
 @quiz.route("/remove-answer/<int:answer_id>")
 @login_required
 def remove_answer(answer_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     awnser = db_session.query(AnswerOption).filter_by(id=answer_id).first()
 
@@ -421,6 +454,9 @@ def remove_answer(answer_id):
 @quiz.route("/add-category", methods=["POST"])
 @login_required
 def add_category():
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     category = QuestionCategory(navn=request.form.get("category_name"))
 
