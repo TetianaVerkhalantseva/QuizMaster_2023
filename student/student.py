@@ -76,7 +76,7 @@ def student_registration():
                 login = form.login.data,
                 fornavn = form.first_name.data,
                 etternavn = form.last_name.data,
-                password = gph(form.password.data, salt_length=16),
+                passord = gph(form.password.data, salt_length=16),
                 admin = False
             )
 
