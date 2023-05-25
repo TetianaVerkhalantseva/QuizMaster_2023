@@ -67,13 +67,6 @@ def student_login():
 
 @student.route("/student-registration", methods=['POST', 'GET'])
 def student_registration():
-
-    if current_user.is_authenticated:
-
-        if current_user['admin']:
-            return redirect(url_for("admin.admin_profile"))
-        else:
-            return redirect(url_for("student.student_profile"))
     
     form = RegistrationForm()
 
@@ -127,17 +120,42 @@ def student_profile():
 
     if current_user['admin']:
         return redirect(url_for("admin.admin_profile"))
+
+    else:
+        quizzes = (
+            db_session.query(
+                Quiz.id,
+                Quiz.navn,
+                Quiz.beskrivelse,
+                func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
+                func.group_concat(QuestionCategory.navn, ',').label('categories')
+            )
+            .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
+            .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
+            .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
+            .group_by(Quiz.id, Quiz.navn)
+            .all()
+        )
+
+        quizzes = list(map(
+            lambda row: {
+                'id': row[0], 'name': row[1], 'description': row[2], 'number_of_questions': row[3], 'categories': list(set(filter(bool, row[4].split(','))))
+            },
+            quizzes
+        ))
+
+        return render_template("student/student_profile.html", quizzes=quizzes)
+
+
+@student.route("/student-assessment")
+@login_required
+def student_assessment():
     
-    quizzes = db_session.query(Quiz).filter_by(admin_id=current_user['id']).all()
-
-    questions = db_session.query(Question).filter_by(admin_id=current_user['id']).all()
-
-    categories = db_session.query(QuestionCategory).all()
-
-    add_category_form = AddCategoryForm()
-
-    #Not finished yet
-    return render_template("student/student_profile.html")
+    if current_user['admin']:
+        return redirect(url_for("admin.assessment"))
+    
+    return render_template("student/student_assessment.html")
+    #TO DO
 
 
 @student.route("/choose-quiz")
@@ -316,6 +334,7 @@ def quiz_result_details(quiz_id):
         questions.append(question_data)
 
     return render_template("student/quiz_result_details.html", quiz=quiz, questions=questions, result=ast.literal_eval(request.form['quiz_result']))
+
 
 @student.route("/student-logout")
 @login_required
