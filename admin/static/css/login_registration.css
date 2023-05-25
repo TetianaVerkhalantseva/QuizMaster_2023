@@ -24,16 +24,8 @@ body {
     max-width: 320px;
 }
 
-.table {
-    /*position: absolute;
-    top: 350px;
-    left: 50%;
-    transform: translate(-50%, -50%);*/
-}
-
 
 tr {
-    /*padding: 20px;*/
     display:flex;
     justify-content: space-between;
     gap: 10px;
@@ -61,4 +53,3 @@ tr {
     background-color: red;
     color: #fff;
 }
-
