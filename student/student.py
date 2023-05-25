@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
-from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, db_session
+from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session
 from utils import parse_quiz_form_data
 
 import ast
@@ -213,16 +213,21 @@ def quiz(quiz_id):
 
         result = parse_quiz_form_data(questions, request.form)
 
-        # question_has_quiz_records = db_session.query(QuestionHasQuiz).filter_by(quiz_id=quiz_id).all()
-        
-        # for record in question_has_quiz_records:
+        quiz_session = QuizSession(quiz_id=quiz_id, student_id=1, godkjent=0)  # TODO Implement student logic
 
-        #     if not result[record.spørsmål_id]['answers']:
-        #         db_session.add(QuizSession(spørsmål_har_quiz_id=record.id, svar_id=None, dato_tid=func.now()))
-        #         continue
+        db_session.add(quiz_session)
 
-        #     for answer in result[record.spørsmål_id]['answers']:
-        #         db_session.add(QuizSession(spørsmål_har_quiz_id=record.id, svar_id=answer, dato_tid=func.now()))
+        db_session.commit()
+
+        # TODO Implement text answer
+        for question_id in result:
+
+            if not result[question_id]['answers']:
+                db_session.add(QuizSessionAnswer(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, godkjent=0))
+                continue
+
+            for answer in result[question_id]['answers']:
+                db_session.add(QuizSessionAnswer(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, svarmulighet_id=answer, godkjent=0))
 
         db_session.commit()
 

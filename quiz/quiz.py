@@ -33,11 +33,6 @@ def remove_quiz(quiz_id):
 
         for record in question_has_quiz_records:
 
-            # quiz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
-
-            # for quiz_session_record in quiz_session_records:
-            #    db_session.delete(quiz_session_record)
-
             db_session.delete(record)
 
         db_session.delete(quiz)
