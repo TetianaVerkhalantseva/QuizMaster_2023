@@ -8,7 +8,7 @@ from models import Quiz, Question, QuestionCategory, AnswerOption, QuestionHasQu
 quiz = Blueprint("quiz", __name__, template_folder="templates", static_folder="static")
 
 
-@quiz.route("/quiz-details<int:quiz_id>")
+@quiz.route("/quiz-details/<int:quiz_id>")
 @login_required
 def quiz_details(quiz_id):
 
@@ -147,7 +147,7 @@ def edit_quiz(quiz_id):
     return render_template("quiz/edit_quiz.html", quiz=_quiz, questions=questions, quiz_question_ids=quiz_question_ids)
 
 
-@quiz.route("/question-details<int:question_id>")
+@quiz.route("/question-details/<int:question_id>")
 @login_required
 def question_details(question_id):
 
