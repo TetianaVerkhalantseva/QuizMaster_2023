@@ -8,7 +8,7 @@ from models import Quiz, Question, QuestionCategory, AnswerOption, QuestionHasQu
 quiz = Blueprint("quiz", __name__, template_folder="templates", static_folder="static")
 
 
-@quiz.route("/quiz-details<int:quiz_id>")
+@quiz.route("/quiz-details/<int:quiz_id>")
 @login_required
 def quiz_details(quiz_id):
 
@@ -32,11 +32,6 @@ def remove_quiz(quiz_id):
         question_has_quiz_records = db_session.query(QuestionHasQuiz).filter_by(quiz_id=quiz_id).all()
 
         for record in question_has_quiz_records:
-
-            # quiz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
-
-            # for quiz_session_record in quiz_session_records:
-            #    db_session.delete(quiz_session_record)
 
             db_session.delete(record)
 
@@ -147,7 +142,7 @@ def edit_quiz(quiz_id):
     return render_template("quiz/edit_quiz.html", quiz=_quiz, questions=questions, quiz_question_ids=quiz_question_ids)
 
 
-@quiz.route("/question-details<int:question_id>")
+@quiz.route("/question-details/<int:question_id>")
 @login_required
 def question_details(question_id):
 

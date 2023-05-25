@@ -1,0 +1,50 @@
+{% extends 'admin/admin_header.html' %}
+
+
+{% block title %} Vurderinger {% endblock %}
+
+{% block stylesheets %}
+
+  {{ super() }}
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/assessment.css') }}">
+
+{% endblock %}
+
+{% block content %} 
+
+<div class="container">
+
+    <h2 class="title"> Vurderinger </h2>
+
+    <div class="quiz-list">
+
+        {% for quiz_session in quiz_sessions %}
+
+            <a href="#" class="quiz-item{{' quiz-item-approved' if quiz_session.approved else ' quiz-item-not-approved' }}">
+
+                <h3> {{ quiz_session.name }} </h3>
+                <p class="quiz-description"> {{ quiz_session.description }} </p>
+
+                <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz_session.number_of_questions }} </p>
+                <p class="quiz-extra-info"> Kategorier: 
+                {% for category in quiz_session.categories %}
+                    <span> {{ category }} </span>
+                {% endfor %}
+                </p>
+
+                {% if quiz_session.approved %}
+                    <p class="quiz-approved-message"> <span> Denne quizen er godkjent </span> </p>
+                {% else %}
+                    <p class="quiz-not-approved-message"> <span> Du må vurdere denne quizen </span> </p>
+                {% endif %}
+
+            </a>
+
+        {% endfor %}
+
+    </div>
+    <a href="{{ url_for('admin.admin_profile') }}" class="button">Tilbake</a>
+</div>
+
+{% endblock %}

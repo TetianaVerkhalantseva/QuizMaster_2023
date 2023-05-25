@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash as gph, check_password_hash as cph
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
-from models import User, Quiz, Question, QuestionCategory, db_session
+from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session
 from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 
@@ -120,6 +121,38 @@ def admin_profile():
     add_category_form = AddCategoryForm()
 
     return render_template("admin/admin_profile.html", quizzes=quizzes, questions=questions, categories=categories, add_category_form=add_category_form)
+
+
+@admin.route("/assessment")
+@login_required
+def assessment():
+
+    quiz_sessions = (
+        db_session.query(
+            QuizSession.id,
+            QuizSession.godkjent,
+            Quiz.navn,
+            Quiz.beskrivelse,
+            func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
+            func.group_concat(QuestionCategory.navn, ',').label('categories'),
+            Quiz.admin_id
+        ).join(Quiz, QuizSession.quiz_id == Quiz.id)
+        .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
+        .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
+        .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
+        .group_by(QuizSession.id)
+        .all()
+    )
+
+    quiz_sessions = list(filter(lambda qs: qs['admin_id'] == current_user['id'], map(
+        lambda row: {
+            'id': row[0], 'approved': row[1], 'name': row[2], 'description': row[3], 'number_of_questions': row[4],
+            'categories': list(set(filter(bool, row[5].split(',')))), 'admin_id': row[6]
+        },
+        quiz_sessions
+    )))
+
+    return render_template("admin/assessment.html", quiz_sessions=quiz_sessions)
 
 
 @admin.route("/admin-logout")
