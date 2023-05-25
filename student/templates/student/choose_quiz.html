@@ -29,7 +29,7 @@
                         <p class="quiz-description"> {{ quiz.description }} </p>
 
                         <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz.number_of_questions }} </p>
-                        <p class="quiz-extra-info"> Kategorier: 
+                        <p class="quiz-extra-info quiz-extra-info-list">  
                         {% for category in quiz.categories %}
                             <span> {{ category }} </span>
                         {% endfor %}
