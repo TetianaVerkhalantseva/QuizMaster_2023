@@ -15,7 +15,11 @@ admin = Blueprint("admin", __name__, template_folder="templates", static_folder=
 def admin_login():
 
     if current_user.is_authenticated:
-        return redirect(url_for("admin.admin_profile"))
+
+        if current_user['admin']:
+            return redirect(url_for("admin.admin_profile"))
+        else:
+            return redirect(url_for("student.student_profile"))
 
     login_form = LoginForm()
 
@@ -23,17 +27,17 @@ def admin_login():
 
         try:
 
-            user = db_session.query(User).filter_by(login=login_form.login.data).first()
+            user = db_session.query(User).filter_by(login=login_form.login.data).filter_by(admin=True).first()
 
             if not user:
 
-                flash(f"Det finnes ingen bruker med påloggingen '{login_form.login.data}'.", category="error")
+                flash(f"Det finnes ingen admin bruker med brukernavn '{login_form.login.data}'.", category="error")
 
                 return redirect(url_for("admin.admin_login"))
 
             if not cph(user.passord, login_form.password.data):
 
-                flash(f"Feil passord for påloggingen '{login_form.login.data}'.", category="error")
+                flash(f"Feil passord for brukernavn '{login_form.login.data}'.", category="error")
 
                 return redirect(url_for("admin.admin_login"))
 
@@ -56,7 +60,11 @@ def admin_login():
 def admin_registration():
 
     if current_user.is_authenticated:
-        return redirect(url_for("admin.admin_profile"))
+
+        if current_user['admin']:
+            return redirect(url_for("admin.admin_profile"))
+        else:
+            return redirect(url_for("student.student_profile"))
 
     registration_form = RegistrationForm()
 
@@ -86,7 +94,7 @@ def admin_registration():
 
             db_session.rollback()
 
-            flash(f"Det finnes allerede en bruker med påloggingen '{registration_form.login.data}'.", category="error")
+            flash(f"Det finnes allerede en bruker med brukernavn '{registration_form.login.data}'.", category="error")
 
             return redirect(url_for("admin.admin_registration"))
 
@@ -112,6 +120,9 @@ def admin_registration():
 @login_required
 def admin_profile():
 
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
     quizzes = db_session.query(Quiz).filter_by(admin_id=current_user['id']).all()
 
     questions = db_session.query(Question).filter_by(admin_id=current_user['id']).all()
@@ -126,6 +137,9 @@ def admin_profile():
 @admin.route("/assessment")
 @login_required
 def assessment():
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     quiz_sessions = (
         db_session.query(
@@ -158,6 +172,9 @@ def assessment():
 @admin.route("/admin-logout")
 @login_required
 def admin_logout():
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
 
     logout_user()
 

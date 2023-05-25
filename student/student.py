@@ -24,7 +24,11 @@ student = Blueprint("student", __name__, template_folder="templates", static_fol
 def student_login():
 
     if current_user.is_authenticated:
-        return redirect(url_for("student.student_profile"))
+
+        if current_user['admin']:
+            return redirect(url_for("admin.admin_profile"))
+        else:
+            return redirect(url_for("student.student_profile"))
 
     login_form = LoginForm()
 
@@ -32,17 +36,17 @@ def student_login():
 
         try:
 
-            user = db_session.query(User).filter_by(login=login_form.login.data).first()
+            user = db_session.query(User).filter_by(login=login_form.login.data).filter_by(admin=False).first()
 
             if not user:
 
-                flash(f"Det finnes ingen bruker med påloggingen '{login_form.login.data}'.", category="error")
+                flash(f"Det finnes ingen student bruker med brukernavn '{login_form.login.data}'.", category="error")
 
                 return redirect(url_for("student.student_login"))
 
             if not cph(user.passord, login_form.password.data):
 
-                flash(f"Feil passord for påloggingen '{login_form.login.data}'.", category="error")
+                flash(f"Feil passord for brukernavn '{login_form.login.data}'.", category="error")
 
                 return redirect(url_for("student.student_login"))
 
@@ -65,7 +69,11 @@ def student_login():
 def student_registration():
 
     if current_user.is_authenticated:
-        return redirect(url_for("student.student_profile"))
+
+        if current_user['admin']:
+            return redirect(url_for("admin.admin_profile"))
+        else:
+            return redirect(url_for("student.student_profile"))
     
     form = RegistrationForm()
 
@@ -85,7 +93,7 @@ def student_registration():
 
             login_user(student)
 
-            flash(f"velkommen {student.fornavn} {student.etternavn}!", category="success")
+            flash(f"Velkommen {student.fornavn} {student.etternavn}!", category="success")
 
             return redirect(url_for("student.student_profile"))
         
@@ -93,7 +101,7 @@ def student_registration():
             
             db_session.rollback()
 
-            flash(f"Det finnes allerede en bruker med påloggingen '{form.username.data}'.", category="error")
+            flash(f"Det finnes allerede en bruker med brukernavn '{form.login.data}'.", category="error")
 
             return redirect(url_for("admin.admin_registration"))
         
@@ -116,6 +124,9 @@ def student_registration():
 @student.route("/student-profile")
 @login_required
 def student_profile():
+
+    if current_user['admin']:
+        return redirect(url_for("admin.admin_profile"))
     
     quizzes = db_session.query(Quiz).filter_by(admin_id=current_user['id']).all()
 
@@ -132,6 +143,9 @@ def student_profile():
 @student.route("/choose-quiz")
 @login_required
 def choose_quiz():
+
+    if current_user['admin']:
+        return redirect(url_for("admin.admin_profile"))
 
     quizzes = (
         db_session.query(
@@ -162,6 +176,9 @@ def choose_quiz():
 @login_required
 def quiz_greeting(quiz_id):
 
+    if current_user['admin']:
+        return redirect(url_for("admin.admin_profile"))
+
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
 
     return render_template("student/quiz_greeting.html", quiz=quiz)
@@ -170,6 +187,9 @@ def quiz_greeting(quiz_id):
 @student.route("/quiz/<int:quiz_id>", methods=["GET", "POST"])
 @login_required
 def quiz(quiz_id):
+
+    if current_user['admin']:
+        return redirect(url_for("admin.admin_profile"))
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
 
@@ -255,6 +275,9 @@ def quiz(quiz_id):
 @login_required
 def quiz_result_details(quiz_id):
 
+    if current_user['admin']:
+        return redirect(url_for("admin.admin_profile"))
+
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
 
     questions_from_db = (
@@ -297,6 +320,9 @@ def quiz_result_details(quiz_id):
 @student.route("/student-logout")
 @login_required
 def student_logout():
+
+    if current_user['admin']:
+        return redirect(url_for("admin.admin_profile"))
 
     logout_user()
 
