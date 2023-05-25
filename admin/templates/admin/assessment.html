@@ -27,7 +27,7 @@
                 <p class="quiz-description"> {{ quiz_session.description }} </p>
 
                 <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz_session.number_of_questions }} </p>
-                <p class="quiz-extra-info"> Kategorier: 
+                <p class="quiz-extra-info quiz-extra-info-list">
                 {% for category in quiz_session.categories %}
                     <span> {{ category }} </span>
                 {% endfor %}

@@ -52,7 +52,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     width: 300px;
     height: 300px;
     background-color: #fff;
@@ -78,13 +78,13 @@ body {
 .quiz-item h3 {
     font-size: 24px;
     font-weight: 700;
-    margin: 20px 0 10px 0;
+    margin: 0;
     font-family: "Microsoft YaHei", sans-serif;
 }
 
 .quiz-item p {
     font-size: 16px;
-    margin: 10px 0;
+    margin: 0;
 }
 
 .quiz-item .quiz-description {
@@ -96,8 +96,14 @@ body {
     line-height: 2;
 }
 
+.quiz-item .quiz-extra-info-list { 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .quiz-item .quiz-extra-info-first {
-    margin-top: 20px;
+    margin: 0; 
 }
 
 .quiz-item .quiz-extra-info span {
@@ -105,6 +111,9 @@ body {
     padding: 4px;
     border-radius: 5px;
     background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    height: 18px;
 }
 
 .quiz-item .categories {
@@ -112,13 +121,12 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    
 }
 
 .quiz-item .quiz-approved-message, .quiz-item .quiz-not-approved-message {
     color: #555;
     font-size: 16px;
-    margin-top: 20px;
     padding: 5px;
     border-radius: 5px;
 }
