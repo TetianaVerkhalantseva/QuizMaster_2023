@@ -18,6 +18,7 @@
       {{ registration_form.csrf_token }}
 
       <h2 class="title"> Registrering </h2>
+      <a href="{{ url_for('admin.admin_login') }}"> Har du en admin konto? Logg inn </a>
 
       <table class="table">
 
@@ -53,7 +54,7 @@
 
       </table>
 
-      <a href="{{ url_for('admin.admin_login') }}"> Har du en konto? Logg inn </a>
+
 
         {% for category, message in get_flashed_messages(with_categories=true) %}
             <div class="flash {{ category }}"> {{ message }} </div>
