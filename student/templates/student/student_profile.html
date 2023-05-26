@@ -54,23 +54,21 @@
 
             {% for quiz in quizzes %}
 
-                {% if quiz.number_of_questions != 0 %}
+                {% if quiz.number_of_questions != 0 and quiz.id not in session['passed_quizzes'] %}
 
                     <a {{ "href=" + url_for('student.quiz_greeting', quiz_id=quiz.id) if quiz.id not in session['passed_quizzes'] else '' }} class="quiz-item{{' quiz-item-passed' if quiz.id in session['passed_quizzes'] else '' }}">
 
                         <h3> {{ quiz.name }} </h3>
+
                         <p class="quiz-description"> {{ quiz.description }} </p>
 
                         <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz.number_of_questions }} </p>
+                        
                         <p class="quiz-extra-info quiz-extra-info-list"> 
                         {% for category in quiz.categories %}
                             <span> {{ category }} </span>
                         {% endfor %}
                         </p>
-
-                        {% if quiz.id in session['passed_quizzes'] %}
-                            <p class="quiz-passed-message"> <span> Har allerede tatt denne quizen </span> </p>
-                        {% endif %}
 
                     </a>
 
