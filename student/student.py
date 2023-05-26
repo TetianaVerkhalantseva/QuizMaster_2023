@@ -167,9 +167,12 @@ def student_assessment():
             Quiz.id,
             Quiz.navn,
             Quiz.beskrivelse,
+            QuizSession.id,
+            QuizSession.godkjent,
             func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
             func.group_concat(QuestionCategory.navn, ',').label('categories')
         )
+        .join(Quiz, QuizSession.quiz_id == Quiz.id)
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
         .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
         .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
@@ -179,7 +182,7 @@ def student_assessment():
 
     quizzes = list(map(
         lambda row: {
-            'id': row[0], 'name': row[1], 'description': row[2], 'number_of_questions': row[3], 'categories': list(set(filter(bool, row[4].split(','))))
+            'id': row[0], 'name': row[1], 'description': row[2], 'quiz_session_id': row[3], 'approved': row[4], 'number_of_questions': row[5], 'categories': list(set(filter(bool, row[6].split(','))))
         },
         quizzes
     ))
