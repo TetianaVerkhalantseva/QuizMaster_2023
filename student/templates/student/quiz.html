@@ -20,10 +20,6 @@
 
 {% endblock %}
 
-{% block header_navbar %}
-    {% include "student/header_navbar.html" %}
-{% endblock %}
-
 {% block body %}
 
     <div class="container">
@@ -77,6 +73,8 @@
                             {% endfor %}
 
                         </div>
+
+                        <a href="{{ url_for('student.student_profile') }}" class="button">Avslutt</a>
 
                         {% if loop.index != 1 %}
                             <button type="button" class="button" onclick="selectQuestion({{ loop.index - 1 }})">Forrige</button>
