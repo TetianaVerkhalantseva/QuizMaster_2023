@@ -1,3 +1,104 @@
+header {
+
+    width: 100%;
+    background: #555;
+    border-bottom: 2px solid #000;
+
+}
+
+header * {
+    display: inline-block;
+}
+
+header .title {
+
+    font: bold 30px "Microsoft YaHei", sans-serif;
+    color: #f4f4f4;
+    padding: 0 20px;
+
+}
+
+header .student-info-container {
+
+    float: right;
+    padding: 0 20px;
+
+}
+
+header .student-info-container * {
+    display: block;
+}
+
+header .student-info-container p {
+
+    font: bold 14px "Microsoft YaHei", sans-serif;
+    color: #f4f4f4;
+
+}
+
+header .student-info-container a {
+
+    font: bold 14px "Microsoft YaHei", sans-serif;
+    color: #a0a0a0;
+    text-decoration: none;
+
+}
+
+header .student-info-container a:hover {
+
+    cursor: pointer;
+    color: #a0a0f4;
+
+}
+
+header .student-info-container a:active {
+
+    cursor: pointer;
+    color: #f4a0a0;
+
+}
+
+.navbar {
+    
+        width: 100%;
+        background: #f0f0f0;
+        border-bottom: 1px solid #111;
+
+}
+
+.navbar ul {
+
+    margin: 0;
+    padding: 8px 20px;
+    list-style: none;
+
+}
+
+.navbar ul li {
+
+    display: inline-block;
+    margin-right: 25px;
+
+}
+
+.navbar ul li a {
+
+    text-decoration: none;
+    font-size: 125%;
+    color: #333;
+    font-family: "Microsoft YaHei", sans-serif;
+    transition: all 0.3s ease;
+
+}
+
+.navbar ul li a:hover {
+
+    color: #735;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+}
+
 a {
     text-decoration: none;
     color: #000;

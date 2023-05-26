@@ -154,8 +154,29 @@ def student_assessment():
     if current_user['admin']:
         return redirect(url_for("admin.assessment"))
     
-    return render_template("student/student_assessment.html")
-    #TO DO
+    quizzes = (
+        db_session.query(
+            Quiz.id,
+            Quiz.navn,
+            Quiz.beskrivelse,
+            func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
+            func.group_concat(QuestionCategory.navn, ',').label('categories')
+        )
+        .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
+        .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
+        .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
+        .group_by(Quiz.id, Quiz.navn)
+        .all()
+    )
+
+    quizzes = list(map(
+        lambda row: {
+            'id': row[0], 'name': row[1], 'description': row[2], 'number_of_questions': row[3], 'categories': list(set(filter(bool, row[4].split(','))))
+        },
+        quizzes
+    ))
+    
+    return render_template("student/student_assessment.html", quizzes=quizzes)
 
 
 @student.route("/choose-quiz")
