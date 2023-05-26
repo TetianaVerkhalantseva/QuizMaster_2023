@@ -20,10 +20,6 @@
 
 {% endblock %}
 
-{% block header_navbar %}
-    {% include "student/header_navbar.html" %}
-{% endblock %}
-
 {% block body %}
 
     <div class="container">
@@ -38,7 +34,7 @@
 
                 {% for question in questions %}
 
-                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == 1 else ''}}{{' last-question-number' if loop.index == questions|length else ''}}" onclick="selectQuestion({{ loop.index }})">
+                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == 1 else ''}}{{' last-question-number' if loop.index == questions|length else ''}}{{' correct' if result[question.id]['correct'] else ''}}{{' particulary-correct' if result[question.id]['particulary_correct'] else ''}}{{' incorrect' if result[question.id]['incorrect'] else ''}}{{' not-answered' if result[question.id]['not_answered'] else ''}}" onclick="selectQuestion({{ loop.index }})">
                         <p> {{ loop.index }} </p>
                     </div>
 
@@ -46,9 +42,7 @@
 
             </div>
 
-            <form id="quiz-submission-form" action="{{ url_for('student.quiz', quiz_id=quiz.id) }}" method="post">
-
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="quiz-result-container">
                 
                 {% for question in questions %}
 
@@ -63,15 +57,7 @@
                             {% for answer_option in question.answer_options %}
 
                                 <div class="answer-option">
-
-                                    {% if question.single_answer %}
-                                        <input type="radio" name="{{ question.id }}" id="{{ answer_option.id }}" value="{{ answer_option.id }} {{ 1 if answer_option.correct else 0 }}">
-                                    {% else %}
-                                        <input type="checkbox" name="{{ question.id }}" id="{{ answer_option.id }}" value="{{ answer_option.id }} {{ 1 if answer_option.correct else 0 }}">
-                                    {% endif %}
-
-                                    <label for="{{ answer_option.id }}"> {{ answer_option.answer }} </label>
-
+                                    <span id="{{ answer_option }}" class="{{' correct' if question.answer_options[answer_option]['correct'] else ''}}{{' incorrect' if answer_option in result[question.id]['answers'] and not result[question.id]['answers'][answer_option]['correct'] else ''}}"> {{ question.answer_options[answer_option]['answer'] }} </span>
                                 </div>
 
                             {% endfor %}
@@ -87,14 +73,14 @@
                         {% endif %}
 
                         {% if loop.index == questions|length %}
-                            <button type="submit" class="button">Send inn</button>
+                            <a href="{{ url_for('admin.assessment') }}" class="button"> Velg Quiz </a>
                         {% endif %}
 
                     </div>
 
                 {% endfor %}
 
-            </form>
+            </div>
             
         </div>
 

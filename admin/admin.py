@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash as gph, check_password_hash as cph
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
 
 from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session
@@ -167,6 +168,75 @@ def assessment():
     )))
 
     return render_template("admin/assessment.html", quiz_sessions=quiz_sessions)
+
+
+@admin.route("/quiz-session-details/<int:quiz_session_id>")
+@login_required
+def quiz_session_details(quiz_session_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
+    quiz = db_session.query(Quiz).join(QuizSession, Quiz.id == QuizSession.quiz_id).filter(QuizSession.id == quiz_session_id).first()
+
+    questions_from_db = (
+        db_session.query(Question)
+        .join(QuestionHasQuiz)
+        .filter(QuestionHasQuiz.quiz_id == quiz.id)
+        .options(joinedload(Question.answer_options))
+        .all()
+    )
+
+    questions = []
+
+    for question in questions_from_db:
+
+        question_data = {
+            "id": question.id,
+            "question": question.spørsmål,
+            "answer_options": {}
+        }
+
+        correct_answers = 0
+
+        for answer_option in question.answer_options:
+
+            answer_option_data = {
+                "id": answer_option.id,
+                "answer": answer_option.svar,
+                "correct": answer_option.korrekt
+            }
+
+            correct_answers += answer_option.korrekt
+
+            question_data["answer_options"][answer_option.id] = answer_option_data
+        
+        question_data["single_answer"] = correct_answers == 1
+            
+        questions.append(question_data)
+
+    result = {}
+
+    for question in questions:
+
+        quiz_session_answers = list(filter(
+            lambda ao: ao.svarmulighet_id is not None,
+            db_session.query(QuizSessionAnswer).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).all()
+        ))
+
+        answers = {}
+
+        for ao in quiz_session_answers:
+            answers[ao.svarmulighet_id] = {'correct': question['answer_options'][ao.svarmulighet_id]['correct']}
+
+        question_not_answered = len(answers) == 0
+        question_correct = all([answer['correct'] for answer in answers.values()]) and not question_not_answered
+        question_particulary_correct = any([answer['correct'] for answer in answers.values()]) and not question_correct and not question_not_answered
+        question_incorrect = not question_correct and not question_particulary_correct and not question_not_answered
+
+        result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered}
+
+    return render_template("admin/quiz_session_details.html", quiz=quiz, questions=questions, result=result)
 
 
 @admin.route("/admin-logout")

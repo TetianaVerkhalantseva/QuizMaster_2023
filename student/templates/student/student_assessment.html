@@ -11,30 +11,11 @@
 
 {% endblock %}
 
+{% block header_navbar %}
+    {% include "student/header_navbar.html" %}
+{% endblock %}
+
 {% block body %}
-
-    <header>
-        
-        <h1 class="title"> Student Profil </h1>
-
-        <div class="student-info-container">
-
-            <p> @{{ current_user['login'] }} </p>
-
-            <a href="{{ url_for('student.student_logout') }}"> Logg ut </a>
-
-        </div>
-
-    </header>
-
-    <nav class="navbar">
-
-        <ul>
-            <li> <a href="{{ url_for('student.student_profile') }}"> Hjem </a> </li>
-            <li> <a href="{{ url_for('student.student_assessment') }}"> Vurderinger </a> </li>
-        </ul>
-
-    </nav>
 
     <div class="container">
 
@@ -66,7 +47,7 @@
 
         </div>
 
-        <a href="{{ url_for('index') }}" class="button">Tilbake</a>
+        <a href="{{ url_for('student.student_profile') }}" class="button">Tilbake</a>
 
     </div>
 
