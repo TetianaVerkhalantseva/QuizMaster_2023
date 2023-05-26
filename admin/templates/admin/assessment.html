@@ -21,7 +21,7 @@
 
         {% for quiz_session in quiz_sessions %}
 
-            <a href="#" class="quiz-item{{' quiz-item-approved' if quiz_session.approved else ' quiz-item-not-approved' }}">
+            <a href="{{ url_for('admin.quiz_session_details', quiz_session_id=quiz_session.id) }}" class="quiz-item{{' quiz-item-approved' if quiz_session.approved else ' quiz-item-not-approved' }}">
 
                 <h3> {{ quiz_session.name }} </h3>
                 <p class="quiz-description"> {{ quiz_session.description }} </p>

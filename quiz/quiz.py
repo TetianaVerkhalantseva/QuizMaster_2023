@@ -121,12 +121,6 @@ def edit_quiz(quiz_id):
             question_has_quiz_records = db_session.query(QuestionHasQuiz).filter_by(quiz_id=quiz_id).all()
 
             for record in question_has_quiz_records:
-
-                # quiz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
-
-                # for quiz_session_record in quiz_session_records:
-                #    db_session.delete(quiz_session_record)
-
                 db_session.delete(record)
 
             db_session.commit()
@@ -189,12 +183,6 @@ def remove_question(question_id):
         question_has_quiz_records = db_session.query(QuestionHasQuiz).filter_by(spørsmål_id=question_id).all()
 
         for record in question_has_quiz_records:
-            
-            # qiuz_session_records = db_session.query(QuizSession).filter_by(spørsmål_har_quiz_id=record.id).all()
-
-            # for quiz_session_record in qiuz_session_records:
-            #        db_session.delete(quiz_session_record)
-
             db_session.delete(record)
 
         for answer in answers:
