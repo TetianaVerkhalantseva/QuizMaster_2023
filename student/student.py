@@ -305,15 +305,24 @@ def quiz(quiz_id):
         
         session.modified = True
 
-        return render_template(
-            "student/quiz_result.html",
-            quiz=quiz,
-            correct=len(list(filter(lambda question: question['correct'], result.values()))),
-            particulary_correct=len(list(filter(lambda question: question['particulary_correct'], result.values()))),
-            incorrect=len(list(filter(lambda question: question['incorrect'], result.values()))),
-            not_answered=len(list(filter(lambda question: question['not_answered'], result.values()))),
-            result=str(result)
-        )
+        if current_user['admin']:
+
+            return redirect(url_for("admin.assessment"))
+            #return render_template(
+                #"student/quiz_result.html",
+                #quiz=quiz,
+                #correct=len(list(filter(lambda question: question['correct'], result.values()))),
+                #particulary_correct=len(list(filter(lambda question: question['particulary_correct'], result.values()))),
+                #incorrect=len(list(filter(lambda question: question['incorrect'], result.values()))),
+                #not_answered=len(list(filter(lambda question: question['not_answered'], result.values()))),
+                #result=str(result)
+            #)
+        
+        else:
+
+            flash(f"Du har sendt inn quiz!", category="success")
+
+            return redirect(url_for("student.choose_quiz"))
 
     return render_template("student/quiz.html", quiz=quiz, questions=questions)
 
