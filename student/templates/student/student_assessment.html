@@ -25,7 +25,7 @@
 
                 {% if quiz.number_of_questions != 0 and quiz.id in session['passed_quizzes'] %}
 
-                    <a {{ "href=" + url_for('student.quiz_greeting', quiz_id=quiz.id) if quiz.id not in session['passed_quizzes'] else '' }} class="quiz-item{{' quiz-item-passed' if quiz.id in session['passed_quizzes'] else '' }}">
+                    <a {{ "href=" + url_for('student.quiz_result_details', quiz_id=quiz.id) if quiz.approved else '' }} class="quiz-item{{' quiz-item-passed' if quiz.id in session['passed_quizzes'] else '' }}">
 
                     <h3> {{ quiz.name }} </h3>
 
@@ -39,8 +39,12 @@
                         {% endfor %}
                     </p>
 
-                    <p class="quiz-passed-message"> <span> Venter på godkjenning </span> </p>
-
+                    {% if quiz.approved %}
+                        <p class="quiz-approved-message"> <span> Denne quizen er godkjent </span> </p>
+                    {% else %}
+                        <p class="quiz-passed-message"> <span> Venter på godkjenning </span> </p>
+                    {% endif %}
+                    
                 {% endif %}
                 
             {% endfor %}
