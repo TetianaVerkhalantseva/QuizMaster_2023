@@ -39,8 +39,12 @@
                         {% endfor %}
                     </p>
 
-                    <p class="quiz-passed-message"> <span> Venter på godkjenning </span> </p>
-
+                    {% if quiz.approved %}
+                        <p class="quiz-approved-message"> <span> Denne quizen er godkjent </span> </p>
+                    {% else %}
+                        <p class="quiz-passed-message"> <span> Venter på godkjenning </span> </p>
+                    {% endif %}
+                    
                 {% endif %}
                 
             {% endfor %}
