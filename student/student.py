@@ -67,7 +67,15 @@ def student_login():
 
 @student.route("/student-registration", methods=['POST', 'GET'])
 def student_registration():
-    
+
+    if current_user.is_authenticated:
+
+        if current_user['admin']:
+            return redirect(url_for("admin.admin_profile"))
+        else:
+            return redirect(url_for("student.student_profile"))
+        
+        
     form = RegistrationForm()
 
     if form.validate_on_submit():
