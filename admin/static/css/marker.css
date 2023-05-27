@@ -2,6 +2,10 @@
     background-color: #80ff80;
 }
 
+.correct-not-selected {
+    background-color: #e0b53d;
+}
+
 .particulary-correct {
     background-color: #e0b53d
 }
