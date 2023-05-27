@@ -139,3 +139,13 @@ body {
     font-weight: bold;
     color: #33a033;
 }
+
+.span-question-not-answered {
+    display: block;
+    margin: 5px auto;
+    width: fit-content;
+    font-size: 130%;
+    font-weight: bold;
+    color: #8080ff;
+    text-align: center;
+}

@@ -29,9 +29,9 @@
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
 
         {% if not quiz_session.godkjent %}
-            <a href="{{ url_for('admin.approve_quiz_session', quiz_session_id=quiz_session.id) }}" class="button-approve-quiz-session"> Godkjenne </a>
+            <a href="{{ url_for('admin.approve_quiz_session', quiz_session_id=quiz_session.id) }}" class="button-approve-quiz-session"> Godkjent hele quiz </a>
         {% else %}
-            <span class="span-quiz-session-approved"> Godkjent </span>
+            <span class="span-quiz-session-approved"> Godkjent quiz </span>
         {% endif %}
 
         <div class="quiz-container">
@@ -57,6 +57,10 @@
                         <div class="question">
                             <p> {{ question.question }} </p>
                         </div>
+
+                        {% if result[question.id]['not_answered'] %}
+                            <span class="span-question-not-answered"> Ikke besvart </span>
+                        {% endif %}
 
                         <div class="answer-options">
 
