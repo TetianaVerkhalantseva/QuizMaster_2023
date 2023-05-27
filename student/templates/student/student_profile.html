@@ -36,7 +36,7 @@
 
                 {% if quiz.number_of_questions != 0 and quiz.id not in session['passed_quizzes'] %}
 
-                    <a {{ "href=" + url_for('student.quiz_greeting', quiz_id=quiz.id) if quiz.id not in session['passed_quizzes'] else '' }} class="quiz-item{{' quiz-item-passed' if quiz.id in session['passed_quizzes'] else '' }}">
+                    <a {{ "href=" + url_for('student.quiz_greeting', quiz_id=quiz.id) if quiz.id not in session['passed_quizzes'] else '' }} class="quiz-item">
 
                         <h3> {{ quiz.name }} </h3>
 
