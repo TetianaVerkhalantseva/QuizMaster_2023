@@ -49,7 +49,6 @@ body {
 }
 
 .quiz-item {
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
@@ -119,10 +118,10 @@ body {
     align-items: center;
 }
 
-.quiz-item .quiz-passed-message {
-    background: #a0a0f0;
-    color: #555;
-    font-size: 16px;
-    padding: 5px;
-    border-radius: 5px;
+.quiz-item .quiz-approved-message {
+    background: #90ff90;
+}
+
+.quiz-item .quiz-not-approved-message {
+    background: #9090ff;
 }
