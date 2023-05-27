@@ -108,3 +108,44 @@ body {
 .answer-option span {
     width: 300px;
 }
+
+.button-approve-quiz-session {
+    display: block;
+    margin-left: 70%;
+    width: fit-content;
+    padding: 8px;
+    border: 1px solid #353;
+    border-radius: 15px;
+    background: #33c033;
+    text-decoration: none;
+    font-size: 120%;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.button-approve-quiz-session:hover {
+    cursor: pointer;
+    border: 1px solid #5a5;
+    background: #383;
+    color: #eee;
+    transition: all 0.3s ease;
+}
+
+.span-quiz-session-approved {
+    display: block;
+    margin-left: 70%;
+    width: fit-content;
+    font-size: 150%;
+    font-weight: bold;
+    color: #33a033;
+}
+
+.span-question-not-answered {
+    display: block;
+    margin: 5px auto;
+    width: fit-content;
+    font-size: 130%;
+    font-weight: bold;
+    color: #8080ff;
+    text-align: center;
+}
