@@ -57,7 +57,7 @@
                             {% for answer_option in question.answer_options %}
 
                                 <div class="answer-option">
-                                    <span id="{{ answer_option }}" class="{{' correct' if question.answer_options[answer_option]['correct'] else ''}}{{' incorrect' if answer_option in result[question.id]['answers'] and not result[question.id]['answers'][answer_option]['correct'] else ''}}"> {{ question.answer_options[answer_option]['answer'] }} </span>
+                                    <span id="{{ answer_option }}" class="{{ ' correct' if answer_option in result[question.id]['answers'] and result[question.id]['answers'][answer_option]['correct'] else '' }}{{' correct-not-selected' if question.answer_options[answer_option]['correct'] and answer_option not in result[question.id]['answers'] else ''}}{{' incorrect' if answer_option in result[question.id]['answers'] and not result[question.id]['answers'][answer_option]['correct'] else ''}}"> {{ question.answer_options[answer_option]['answer'] }} </span>
                                 </div>
 
                             {% endfor %}
