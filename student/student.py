@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
-from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session
+from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session, QuizComment, AnswerComment
 from utils import parse_quiz_form_data
 
 import ast
@@ -172,7 +172,7 @@ def student_assessment():
             func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
             func.group_concat(QuestionCategory.navn, ',').label('categories')
         )
-        .join(Quiz, QuizSession.quiz_id == Quiz.id)
+        .join(QuizSession, Quiz.id == QuizSession.quiz_id)
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
         .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
         .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
@@ -325,7 +325,7 @@ def quiz(quiz_id):
 
             flash(f"Du har sendt inn quiz!", category="success")
 
-            return redirect(url_for("student.choose_quiz"))
+            return redirect(url_for("student.student_profile"))
 
     return render_template("student/quiz.html", quiz=quiz, questions=questions)
 
