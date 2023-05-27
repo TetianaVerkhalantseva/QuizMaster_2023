@@ -230,9 +230,9 @@ def quiz_session_details(quiz_session_id):
             answers[ao.svarmulighet_id] = {'correct': question['answer_options'][ao.svarmulighet_id]['correct']}
 
         question_not_answered = len(answers) == 0
-        question_correct = all([answer['correct'] for answer in answers.values()]) and not question_not_answered
-        question_particulary_correct = any([answer['correct'] for answer in answers.values()]) and not question_correct and not question_not_answered
-        question_incorrect = not question_correct and not question_particulary_correct and not question_not_answered
+        question_correct = all([answer['correct'] for answer in answers.values()]) and set(answers.keys()) == set([ao['id'] for ao in question['answer_options'].values() if ao['correct']]) and not question_not_answered
+        question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
+        question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
 
         result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered}
 
