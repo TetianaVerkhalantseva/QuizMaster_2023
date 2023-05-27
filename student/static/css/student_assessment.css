@@ -118,10 +118,18 @@ body {
     align-items: center;
 }
 
-.quiz-item .quiz-passed-message {
-    background: #a0a0f0;
+.quiz-item .quiz-approved-message {
     color: #555;
     font-size: 16px;
     padding: 5px;
     border-radius: 5px;
+    background: #90ff90;
+}
+
+.quiz-item .quiz-not-approved-message {
+    color: #555;
+    font-size: 16px;
+    padding: 5px;
+    border-radius: 5px;
+    background: #9090ff;
 }
