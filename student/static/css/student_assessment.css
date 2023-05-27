@@ -62,6 +62,10 @@ body {
 }
 
 .quiz-item-passed {
+    background-color: #f4f4f4;
+}
+
+.quiz-item-not-passed {
     background-color: #d0d0d0;
 }
 
