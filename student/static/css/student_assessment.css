@@ -62,7 +62,11 @@ body {
 }
 
 .quiz-item-passed {
-    background-color: #8e8c8c;
+    background-color: #e1ffca;
+}
+
+.quiz-item-not-passed {
+    background-color: #b1b1b1;
 }
 
 .quiz-item:hover {
