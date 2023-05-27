@@ -28,6 +28,12 @@
 
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
 
+        {% if not quiz_session.godkjent %}
+            <a href="{{ url_for('admin.approve_quiz_session', quiz_session_id=quiz_session.id) }}" class="button-approve-quiz-session"> Godkjenne </a>
+        {% else %}
+            <span class="span-quiz-session-approved"> Godkjent </span>
+        {% endif %}
+
         <div class="quiz-container">
 
             <div class="question-numbers" id="question-numbers">

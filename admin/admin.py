@@ -177,7 +177,9 @@ def quiz_session_details(quiz_session_id):
     if not current_user['admin']:
         return redirect(url_for("student.student_profile"))
 
-    quiz = db_session.query(Quiz).join(QuizSession, Quiz.id == QuizSession.quiz_id).filter(QuizSession.id == quiz_session_id).first()
+    quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id).first()
+
+    quiz = db_session.query(Quiz).filter_by(id=quiz_session.quiz_id).first()
 
     questions_from_db = (
         db_session.query(Question)
@@ -236,7 +238,23 @@ def quiz_session_details(quiz_session_id):
 
         result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered}
 
-    return render_template("admin/quiz_session_details.html", quiz=quiz, questions=questions, result=result)
+    return render_template("admin/quiz_session_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result)
+
+
+@admin.route("/approve-quiz-session/<int:quiz_session_id>")
+@login_required
+def approve_quiz_session(quiz_session_id):
+    
+        if not current_user['admin']:
+            return redirect(url_for("student.student_profile"))
+    
+        quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id).first()
+    
+        quiz_session.godkjent = True
+    
+        db_session.commit()
+    
+        return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_id))
 
 
 @admin.route("/admin-logout")
