@@ -25,25 +25,25 @@ header .title {
 
 }
 
-header .admin-info-container {
+header .student-info-container {
 
   float: right;
   padding: 0 20px;
 
 }
 
-header .admin-info-container * {
+header .student-info-container * {
   display: block;
 }
 
-header .admin-info-container p {
+header .student-info-container p {
 
   font: bold 14px "Microsoft YaHei", sans-serif;
   color: #f4f4f4;
 
 }
 
-header .admin-info-container a {
+header .student-info-container a {
 
   font: bold 14px "Microsoft YaHei", sans-serif;
   color: #a0a0a0;
@@ -51,14 +51,14 @@ header .admin-info-container a {
 
 }
 
-header .admin-info-container a:hover {
+header .student-info-container a:hover {
 
   cursor: pointer;
   color: #a0a0f4;
 
 }
 
-header .admin-info-container a:active {
+header .student-info-container a:active {
 
   cursor: pointer;
   color: #f4a0a0;
