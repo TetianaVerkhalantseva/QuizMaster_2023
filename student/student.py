@@ -172,7 +172,7 @@ def student_assessment():
             func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
             func.group_concat(QuestionCategory.navn, ',').label('categories')
         )
-        .join(Quiz, QuizSession.quiz_id == Quiz.id)
+        .join(QuizSession, Quiz.id == QuizSession.quiz_id)
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
         .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
         .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
