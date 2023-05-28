@@ -176,6 +176,8 @@ def quiz_session_details(quiz_session_id):
 
     if not current_user['admin']:
         return redirect(url_for("student.student_profile"))
+    
+    init_selected = request.args.get('initSelected', 1, type=int)
 
     quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id).first()
 
@@ -221,9 +223,11 @@ def quiz_session_details(quiz_session_id):
 
     for question in questions:
 
+        quiz_session_answers_db = db_session.query(QuizSessionAnswer).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).all()
+
         quiz_session_answers = list(filter(
             lambda ao: ao.svarmulighet_id is not None,
-            db_session.query(QuizSessionAnswer).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).all()
+            quiz_session_answers_db
         ))
 
         answers = {}
@@ -236,9 +240,11 @@ def quiz_session_details(quiz_session_id):
         question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
         question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
 
-        result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered}
+        approved = all([qsa.godkjent for qsa in quiz_session_answers_db])
 
-    return render_template("admin/quiz_session_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result)
+        result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered, 'approved': approved}
+
+    return render_template("admin/quiz_session_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result, init_selected=init_selected)
 
 
 @admin.route("/approve-quiz-session/<int:quiz_session_id>")
@@ -251,10 +257,41 @@ def approve_quiz_session(quiz_session_id):
         quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id).first()
     
         quiz_session.godkjent = True
+
+        quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_id=quiz_session_id).all()
+
+        for quiz_session_answer in quiz_session_answers:
+            quiz_session_answer.godkjent = True
     
         db_session.commit()
     
         return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_id))
+
+
+@admin.route("/approve-quiz-session-question/<int:quiz_session_id>/<int:question_id>")
+@login_required
+def approve_quiz_session_question(quiz_session_id, question_id):
+
+    init_selected = request.args.get('initSelected', 1, type=int)
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
+    quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_id=quiz_session_id).all()
+
+    for quiz_session_answer in filter(lambda qsa: qsa.spørsmål_id == question_id, quiz_session_answers):
+        quiz_session_answer.godkjent = True
+
+    db_session.commit()
+
+    if all([qsa.godkjent for qsa in quiz_session_answers]):
+        
+        quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id).first()
+        quiz_session.godkjent = True
+
+        db_session.commit()
+
+    return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_id, initSelected=init_selected))
 
 
 @admin.route("/admin-logout")
