@@ -40,7 +40,7 @@
 
                 {% for question in questions %}
 
-                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == 1 else ''}}{{' last-question-number' if loop.index == questions|length else ''}}{{' correct' if result[question.id]['correct'] else ''}}{{' particulary-correct' if result[question.id]['particulary_correct'] else ''}}{{' incorrect' if result[question.id]['incorrect'] else ''}}{{' not-answered' if result[question.id]['not_answered'] else ''}}" onclick="selectQuestion({{ loop.index }})">
+                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == init_selected else ''}}{{' last-question-number' if loop.index == questions|length else ''}}{{' correct' if result[question.id]['correct'] else ''}}{{' particulary-correct' if result[question.id]['particulary_correct'] else ''}}{{' incorrect' if result[question.id]['incorrect'] else ''}}{{' not-answered' if result[question.id]['not_answered'] else ''}}" onclick="selectQuestion({{ loop.index }})">
                         <p> {{ loop.index }} </p>
                     </div>
 
@@ -52,7 +52,7 @@
                 
                 {% for question in questions %}
 
-                    <div class="question-container" id="question-container-{{ loop.index }}" style="display: {{ 'block' if loop.index == 1 else 'none' }};">
+                    <div class="question-container" id="question-container-{{ loop.index }}" style="display: {{ 'block' if loop.index == init_selected else 'none' }};">
 
                         <div class="question">
                             <p> {{ question.question }} </p>
@@ -85,6 +85,38 @@
                         {% if loop.index == questions|length %}
                             <a href="{{ url_for('admin.assessment') }}" class="button"> Velg Quiz </a>
                         {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="quiz-questions-approval-comment-container">
+
+                {% for question in questions %}
+
+                    <div class="question-approval-comment-container" id="question-approval-comment-container-{{ loop.index }}" style="display: {{ 'block' if loop.index == init_selected else 'none' }};">
+                        
+                        {% if not result[question.id]['approved'] %}
+                            <a href="{{ url_for('admin.approve_quiz_session_question', quiz_session_id=quiz_session.id, question_id=question.id, initSelected=loop.index) }}" class="button-approve-quiz-session-answer"> Godkjent et spørsmål </a>
+                        {% else %}
+                            <span class="span-quiz-session-answer-approved"> Godkjent spørsmål </span>
+                        {% endif %}
+
+                        <form class="form-quiz-session-answer-comment" action="#" method="post">
+
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                            <input type="hidden" name="quiz_session_id" value="{{ quiz_session.id }}">
+                            <input type="hidden" name="question_id" value="{{ question.id }}">
+                            <input type="hidden" name="initSelected" value="{{ loop.index }}">
+
+                            <textarea name="comment" class="textarea-quiz-session-answer-comment" placeholder="Send inn en kommentar til spørsmålet"></textarea>
+
+                            <input type="submit" class="submit-quiz-session-answer-comment" value="Send kommentar">
+
+                        </form>
 
                     </div>
 
