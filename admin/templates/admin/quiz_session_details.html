@@ -104,6 +104,20 @@
                             <span class="span-quiz-session-answer-approved"> Godkjent spørsmål </span>
                         {% endif %}
 
+                        <form class="form-quiz-session-answer-comment" action="#" method="post">
+
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                            <input type="hidden" name="quiz_session_id" value="{{ quiz_session.id }}">
+                            <input type="hidden" name="question_id" value="{{ question.id }}">
+                            <input type="hidden" name="initSelected" value="{{ loop.index }}">
+
+                            <textarea name="comment" class="textarea-quiz-session-answer-comment" placeholder="Send inn en kommentar til spørsmålet"></textarea>
+
+                            <input type="submit" class="submit-quiz-session-answer-comment" value="Send kommentar">
+
+                        </form>
+
                     </div>
 
                 {% endfor %}

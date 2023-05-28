@@ -173,3 +173,34 @@ body {
     color: #8080ff;
     text-align: center;
 }
+
+.form-quiz-session-answer-comment {
+    width: 90%;
+    margin: 10px auto;
+}
+
+.form-quiz-session-answer-comment textarea {
+    width: 90%;
+    height: 80px;
+    padding: 5px;
+    border-radius: 10px;
+    resize: none;
+}
+
+.form-quiz-session-answer-comment input[type="submit"] {
+    margin: 10px auto;
+    border: 1px solid #b6b5b5;
+    padding: 8px;
+    border-radius: 10px;
+    background: #e4e4e4;
+    color: #b6b5b5;
+    font-size: 100%;
+    transition: all 0.3s ease;
+}
+
+.form-quiz-session-answer-comment input[type="submit"]:hover {
+    cursor: pointer;
+    background: #b6b5b5;
+    color: #555;
+    transition: all 0.3s ease;
+}
