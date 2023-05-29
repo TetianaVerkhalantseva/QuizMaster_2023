@@ -330,19 +330,21 @@ def quiz(quiz_id):
     return render_template("student/quiz.html", quiz=quiz, questions=questions)
 
 
-@student.route("/quiz-result-details/<int:quiz_id>", methods=["POST"])
+@student.route("/quiz-result-details/<int:quiz_session_id>")
 @login_required
-def quiz_result_details(quiz_id):
+def quiz_result_details(quiz_session_id):
 
     if current_user['admin']:
         return redirect(url_for("admin.admin_profile"))
 
-    quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
+    quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id).first()
+
+    quiz = db_session.query(Quiz).filter_by(id=quiz_session.quiz_id).first()
 
     questions_from_db = (
         db_session.query(Question)
         .join(QuestionHasQuiz)
-        .filter(QuestionHasQuiz.quiz_id == quiz_id)
+        .filter(QuestionHasQuiz.quiz_id == quiz.id)
         .options(joinedload(Question.answer_options))
         .all()
     )
@@ -362,6 +364,7 @@ def quiz_result_details(quiz_id):
         for answer_option in question.answer_options:
 
             answer_option_data = {
+                "id": answer_option.id,
                 "answer": answer_option.svar,
                 "correct": answer_option.korrekt
             }
@@ -374,7 +377,28 @@ def quiz_result_details(quiz_id):
             
         questions.append(question_data)
 
-    return render_template("student/quiz_result_details.html", quiz=quiz, questions=questions, result=ast.literal_eval(request.form['quiz_result']))
+    result = {}
+
+    for question in questions:
+
+        quiz_session_answers = list(filter(
+            lambda ao: ao.svarmulighet_id is not None,
+            db_session.query(QuizSessionAnswer).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).all()
+        ))
+
+        answers = {}
+
+        for ao in quiz_session_answers:
+            answers[ao.svarmulighet_id] = {'correct': question['answer_options'][ao.svarmulighet_id]['correct']}
+
+        question_not_answered = len(answers) == 0
+        question_correct = all([answer['correct'] for answer in answers.values()]) and set(answers.keys()) == set([ao['id'] for ao in question['answer_options'].values() if ao['correct']]) and not question_not_answered
+        question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
+        question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
+
+        result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered}
+
+    return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result)
 
 
 @student.route("/student-logout")
