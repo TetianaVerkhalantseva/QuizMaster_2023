@@ -176,7 +176,7 @@ def student_assessment():
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
         .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
         .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
-        .group_by(Quiz.id, Quiz.navn)
+        .group_by(Quiz.id)
         .all()
     )
 
