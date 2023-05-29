@@ -40,7 +40,7 @@
 
                 {% for question in questions %}
 
-                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == 1 else ''}}{{' last-question-number' if loop.index == questions|length else ''}}{{' correct' if result[question.id]['correct'] else ''}}{{' particulary-correct' if result[question.id]['particulary_correct'] else ''}}{{' incorrect' if result[question.id]['incorrect'] else ''}}{{' not-answered' if result[question.id]['not_answered'] else ''}}" onclick="selectQuestion({{ loop.index }})">
+                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == 1 else ''}}{{' last-question-number' if loop.index == questions|length else ''}}" onclick="selectQuestion({{ loop.index }})">
                         <p> {{ loop.index }} </p>
                     </div>
 
@@ -67,7 +67,7 @@
                             {% for answer_option in question.answer_options %}
 
                                 <div class="answer-option">
-                                    <span id="{{ answer_option }}" class="{{' correct' if question.answer_options[answer_option]['correct'] else ''}}{{' incorrect' if answer_option in result[question.id]['answers'] and not result[question.id]['answers'][answer_option]['correct'] else ''}}"> {{ question.answer_options[answer_option]['answer'] }} </span>
+                                    <span id="{{ answer_option }}" class="{{'selected' if answer_option in result[question.id]['answers']}}"> {{ question.answer_options[answer_option]['answer'] }} </span>
                                 </div>
 
                             {% endfor %}
@@ -83,7 +83,7 @@
                         {% endif %}
 
                         {% if loop.index == questions|length %}
-                            <a href="{{ url_for('student.choose_quiz') }}" class="button"> Velg Quiz </a>
+                            <a href="{{ url_for('student.student_assessment') }}" class="button"> Avslutt </a>
                         {% endif %}
 
                     </div>
