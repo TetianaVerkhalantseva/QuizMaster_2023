@@ -18,4 +18,13 @@ function selectQuestion(questionNumber) {
     var questionContainer = document.getElementById("question-container-" + questionNumber);
     questionContainer.style.display = "block";
 
+    var questionApprovalCommentContainers = document.getElementsByClassName("question-approval-comment-container");
+
+    for (var i = 0; i < questionApprovalCommentContainers.length; i++) {
+        questionApprovalCommentContainers[i].style.display = "none";
+    }
+
+    var questionApprovalCommentContainer = document.getElementById("question-approval-comment-container-" + questionNumber);
+    questionApprovalCommentContainer.style.display = "block";
+
 }
