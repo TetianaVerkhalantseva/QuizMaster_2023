@@ -32,6 +32,8 @@
 
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
 
+        <span class="span-quiz-session-approved"> Godkjent </span>
+        
         <div class="quiz-container">
 
             <div class="question-numbers" id="question-numbers">
@@ -56,6 +58,10 @@
                             <p> {{ question.question }} </p>
                         </div>
 
+                        {% if result[question.id]['not_answered'] %}
+                            <span class="span-question-not-answered"> Ikke besvart </span>
+                        {% endif %}
+                        
                         <div class="answer-options">
 
                             {% for answer_option in question.answer_options %}
@@ -85,7 +91,24 @@
                 {% endfor %}
 
             </div>
+
+            <div class="quiz-questions-approval-comment-container">
             
+                {% for question in questions %}
+
+                    <div class="question-approval-comment-container" id="question-approval-comment-container-{{ loop.index }}" style="display: {{ 'block' if loop.index == init_selected else 'none' }};">
+                        
+                        <span class="span-quiz-session-answer-approved"> Godkjent </span>
+
+                        
+
+                        
+                    </div>
+                
+                {% endfor %}
+
+            </div>
+
         </div>
 
     </div>
