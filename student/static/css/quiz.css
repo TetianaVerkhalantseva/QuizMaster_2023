@@ -108,3 +108,29 @@ body {
 .answer-option span {
     width: 300px;
 }
+
+.span-quiz-session-approved, .span-quiz-session-answer-approved {
+    display: block;
+    margin-left: 70%;
+    width: fit-content;
+    font-size: 150%;
+    font-weight: bold;
+    color: #33a033;
+}
+
+.span-question-not-answered {
+    display: block;
+    margin: 5px auto;
+    width: fit-content;
+    font-size: 130%;
+    font-weight: bold;
+    color: #8080ff;
+    text-align: center;
+}
+
+.quiz-questions-approval-comment-container {
+    width: 300px;
+    border-left: 2px solid #444;
+}
+
+
