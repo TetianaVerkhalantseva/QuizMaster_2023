@@ -81,14 +81,19 @@ class QuizSession(base):
     godkjent = Column(Boolean, nullable=False)
 
 
-class QuizSessionAnswer(base):
-    __tablename__ = 'quiz_sesjon_svar'
+class QuizSessionQuestion(base):
+    __tablename__ = 'quiz_sesjon_spørsmål'
     id = Column(Integer, primary_key=True, autoincrement=True)
     quiz_sesjon_id = Column(Integer, ForeignKey('quiz_sesjon.id'), nullable=False)
     spørsmål_id = Column(Integer, ForeignKey('spørsmål.id'), nullable=False)
-    svarmulighet_id = Column(Integer, ForeignKey('svarmulighet.id'), nullable=True)
     tekstsvar = Column(Text(1000), nullable=True)
     godkjent = Column(Boolean, nullable=False)
+
+
+class QuizSessionAnswer(base):
+    __tablename__ = 'quiz_sesjon_svar'
+    quiz_sesjon_spørsmål_id = Column(Integer, ForeignKey('quiz_sesjon_spørsmål.id'), primary_key=True, nullable=False)
+    svarmulighet_id = Column(Integer, ForeignKey('svarmulighet.id'), primary_key=True, nullable=False)
 
 
 class QuizComment(base):
@@ -99,10 +104,10 @@ class QuizComment(base):
     tekst = Column(Text(1000), nullable=False)
 
 
-class AnswerComment(base):
-    __tablename__ = 'svar_kommentar'
+class QuestionComment(base):
+    __tablename__ = 'spørsmål_kommentar'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    quiz_sesjon_svar_id = Column(Integer, ForeignKey('quiz_sesjon_svar.id'), nullable=False)
+    quiz_sesjon_spørsmål_id = Column(Integer, ForeignKey('quiz_sesjon_spørsmål.id'), nullable=False)
     bruker_id = Column(Integer, ForeignKey('bruker.id'), nullable=True)
     tekst = Column(Text(1000), nullable=False)
 

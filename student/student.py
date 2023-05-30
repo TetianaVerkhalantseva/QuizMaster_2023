@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
-from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session, QuizComment, AnswerComment
+from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, db_session, QuizComment, QuestionComment
 from utils import parse_quiz_form_data
 
 import ast
@@ -259,12 +259,17 @@ def quiz(quiz_id):
 
         for question_id in result:
 
+            quiz_session_question = QuizSessionQuestion(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, godkjent=0)
+
+            db_session.add(quiz_session_question)
+
+            db_session.commit()
+
             if not result[question_id]['answers']:
-                db_session.add(QuizSessionAnswer(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, godkjent=0))
                 continue
 
             for answer in result[question_id]['answers']:
-                db_session.add(QuizSessionAnswer(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, svarmulighet_id=answer, godkjent=0))
+                db_session.add(QuizSessionAnswer(quiz_sesjon_spørsmål_id=quiz_session_question.id, svarmulighet_id=answer))
 
         db_session.commit()
 
