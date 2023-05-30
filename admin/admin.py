@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
 
-from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionAnswer, db_session
+from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionAnswer, QuizComment, db_session
 from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 
@@ -244,7 +244,9 @@ def quiz_session_details(quiz_session_id):
 
         result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered, 'approved': approved}
 
-    return render_template("admin/quiz_session_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result, init_selected=init_selected)
+        quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session_id).first()
+
+    return render_template("admin/quiz_session_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result, init_selected=init_selected, quiz_session_comment=quiz_session_comment)
 
 
 @admin.route("/approve-quiz-session/<int:quiz_session_id>")
@@ -292,6 +294,22 @@ def approve_quiz_session_question(quiz_session_id, question_id):
         db_session.commit()
 
     return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_id, initSelected=init_selected))
+
+
+@admin.route("/comment-quiz-session/<int:quiz_session_id>", methods=["POST"])
+@login_required
+def comment_quiz_session(quiz_session_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
+    quiz_comment = QuizComment(quiz_sesjon_id=quiz_session_id, bruker_id=current_user['id'], tekst=request.form['comment'])
+
+    db_session.add(quiz_comment)
+
+    db_session.commit()
+
+    return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_id))
 
 
 @admin.route("/admin-logout")

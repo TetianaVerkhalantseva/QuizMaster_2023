@@ -147,7 +147,6 @@ body {
 
 .span-quiz-session-approved, .span-quiz-session-answer-approved {
     display: block;
-    margin-left: 70%;
     width: fit-content;
     font-size: 150%;
     font-weight: bold;
@@ -155,7 +154,7 @@ body {
 }
 
 .span-quiz-session-approved {
-    margin-left: 70%;
+    margin: 5px auto;
     font-size: 150%;
 }
 
@@ -203,4 +202,56 @@ body {
     background: #b6b5b5;
     color: #555;
     transition: all 0.3s ease;
+}
+
+.form-quiz-session-comment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.form-quiz-session-comment textarea {
+    width: 70%;
+    padding: 5px;
+    border-radius: 10px;
+    resize: none;
+}
+
+.form-quiz-session-comment input[type="submit"] {
+    margin: 10px auto;
+    border: 1px solid #b6b5b5;
+    padding: 8px;
+    border-radius: 10px;
+    background: #e4e4e4;
+    color: #b6b5b5;
+    font-size: 120%;
+    transition: all 0.3s ease;
+}
+
+.form-quiz-session-comment input[type="submit"]:hover {
+    cursor: pointer;
+    background: #b6b5b5;
+    color: #555;
+    transition: all 0.3s ease;
+}
+
+.comment-approval-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.comment-approval-container .span-quiz-session-comment {
+    width: 70%;
+    word-wrap: break-word;
+    padding: 20px;
+    border-radius: 15px;
+    background: #ddd;
+    line-height: 1.5;
+    font-family: "Microsoft YaHei", sans-serif;
 }
