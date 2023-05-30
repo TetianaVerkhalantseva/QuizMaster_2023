@@ -251,13 +251,12 @@ def quiz(quiz_id):
 
         result = parse_quiz_form_data(questions, request.form)
 
-        quiz_session = QuizSession(quiz_id=quiz_id, student_id=1, godkjent=0)  # TODO Implement student logic
+        quiz_session = QuizSession(quiz_id=quiz_id, student_id=1, godkjent=0)
 
         db_session.add(quiz_session)
 
         db_session.commit()
 
-        # TODO Implement text answer
         for question_id in result:
 
             if not result[question_id]['answers']:
@@ -279,15 +278,6 @@ def quiz(quiz_id):
         if current_user['admin']:
 
             return redirect(url_for("admin.assessment"))
-            #return render_template(
-                #"student/quiz_result.html",
-                #quiz=quiz,
-                #correct=len(list(filter(lambda question: question['correct'], result.values()))),
-                #particulary_correct=len(list(filter(lambda question: question['particulary_correct'], result.values()))),
-                #incorrect=len(list(filter(lambda question: question['incorrect'], result.values()))),
-                #not_answered=len(list(filter(lambda question: question['not_answered'], result.values()))),
-                #result=str(result)
-            #)
         
         else:
 
