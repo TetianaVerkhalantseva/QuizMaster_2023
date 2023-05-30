@@ -28,10 +28,42 @@
 
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
 
-        {% if not quiz_session.godkjent %}
-            <a href="{{ url_for('admin.approve_quiz_session', quiz_session_id=quiz_session.id) }}" class="button-approve-quiz-session"> Godkjent hele quiz </a>
+        {% if quiz_session_comment %}
+
+            <div class="comment-approval-container">
+
+                <span class="span-quiz-session-comment"> {{ quiz_session_comment.tekst }} </span>
+
+                {% if not quiz_session.godkjent %}
+                    <a href="{{ url_for('admin.approve_quiz_session', quiz_session_id=quiz_session.id) }}" class="button-approve-quiz-session"> Godkjent hele quiz </a>
+                {% else %}
+                    <span class="span-quiz-session-approved"> Godkjent quiz </span>
+                {% endif %}
+
+            </div>
+
         {% else %}
-            <span class="span-quiz-session-approved"> Godkjent quiz </span>
+
+            <form class="form-quiz-session-comment" action="{{ url_for('admin.comment_quiz_session', quiz_session_id=quiz_session.id) }}" method="post">
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <textarea name="comment" class="textarea-quiz-session-comment" placeholder="Send inn en kommentar til hele quizen" required></textarea>
+
+                <div class="submit-approval-container">
+
+                    {% if not quiz_session.godkjent %}
+                        <a href="{{ url_for('admin.approve_quiz_session', quiz_session_id=quiz_session.id) }}" class="button-approve-quiz-session"> Godkjent hele quiz </a>
+                    {% else %}
+                        <span class="span-quiz-session-approved"> Godkjent quiz </span>
+                    {% endif %}
+
+                    <input type="submit" class="submit-quiz-session-comment" value="Send kommentar">
+
+                </div>
+
+            </form>
+
         {% endif %}
 
         <div class="quiz-container">
