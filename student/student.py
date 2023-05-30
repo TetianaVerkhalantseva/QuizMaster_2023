@@ -190,38 +190,6 @@ def student_assessment():
     return render_template("student/student_assessment.html", quizzes=quizzes)
 
 
-@student.route("/choose-quiz")
-@login_required
-def choose_quiz():
-
-    if current_user['admin']:
-        return redirect(url_for("admin.admin_profile"))
-
-    quizzes = (
-        db_session.query(
-            Quiz.id,
-            Quiz.navn,
-            Quiz.beskrivelse,
-            func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
-            func.group_concat(QuestionCategory.navn, ',').label('categories')
-        )
-        .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
-        .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
-        .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
-        .group_by(Quiz.id, Quiz.navn)
-        .all()
-    )
-
-    quizzes = list(map(
-        lambda row: {
-            'id': row[0], 'name': row[1], 'description': row[2], 'number_of_questions': row[3], 'categories': list(set(filter(bool, row[4].split(','))))
-        },
-        quizzes
-    ))
-
-    return render_template("student/choose_quiz.html", quizzes=quizzes)
-
-
 @student.route("/quiz-greeting/<int:quiz_id>")
 @login_required
 def quiz_greeting(quiz_id):
@@ -366,10 +334,14 @@ def quiz_result_details(quiz_session_id):
             answer_option_data = {
                 "id": answer_option.id,
                 "answer": answer_option.svar,
+                "correct": answer_option.korrekt
             }
 
+            correct_answers += answer_option.korrekt
 
             question_data["answer_options"][answer_option.id] = answer_option_data
+        
+        question_data["single_answer"] = correct_answers == 1
             
         questions.append(question_data)
 
@@ -385,11 +357,14 @@ def quiz_result_details(quiz_session_id):
         answers = {}
 
         for ao in quiz_session_answers:
-            answers[ao.svarmulighet_id] = {'answer': question['answer_options'][ao.svarmulighet_id]['answer']}
+            answers[ao.svarmulighet_id] = {'correct': question['answer_options'][ao.svarmulighet_id]['correct']}
 
         question_not_answered = len(answers) == 0
+        question_correct = all([answer['correct'] for answer in answers.values()]) and set(answers.keys()) == set([ao['id'] for ao in question['answer_options'].values() if ao['correct']]) and not question_not_answered
+        question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
+        question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
 
-        result[question['id']] = {'answers': answers, 'not_answered': question_not_answered}
+        result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered}
 
     return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result)
 

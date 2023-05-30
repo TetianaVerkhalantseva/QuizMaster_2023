@@ -96,13 +96,10 @@
             
                 {% for question in questions %}
 
-                    <div class="question-approval-comment-container" id="question-approval-comment-container-{{ loop.index }}" style="display: {{ 'block' if loop.index == init_selected else 'none' }};">
+                    <div class="quiz-questions-approval-comment-container" id="question-approval-comment-container-{{ loop.index }}" style="display: {{ 'block' if loop.index == init_selected else 'none' }};">
                         
                         <span class="span-quiz-session-answer-approved"> Godkjent </span>
 
-                        
-
-                        
                     </div>
                 
                 {% endfor %}
