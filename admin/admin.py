@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
 
-from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionAnswer, QuizComment, db_session
+from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, QuizComment, db_session
 from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 
@@ -223,12 +223,9 @@ def quiz_session_details(quiz_session_id):
 
     for question in questions:
 
-        quiz_session_answers_db = db_session.query(QuizSessionAnswer).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).all()
+        quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).first()
 
-        quiz_session_answers = list(filter(
-            lambda ao: ao.svarmulighet_id is not None,
-            quiz_session_answers_db
-        ))
+        quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).all()
 
         answers = {}
 
@@ -240,9 +237,10 @@ def quiz_session_details(quiz_session_id):
         question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
         question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
 
-        approved = all([qsa.godkjent for qsa in quiz_session_answers_db])
-
-        result[question['id']] = {'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct, 'incorrect': question_incorrect, 'not_answered': question_not_answered, 'approved': approved}
+        result[question['id']] = {
+            'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct,
+            'incorrect': question_incorrect, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
+        }
 
         quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session_id).first()
 
@@ -260,10 +258,10 @@ def approve_quiz_session(quiz_session_id):
     
         quiz_session.godkjent = True
 
-        quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_id=quiz_session_id).all()
+        quiz_session_questions = db_session.query(QuizSessionQuestion).filter_by(quiz_sesjon_id=quiz_session_id).all()
 
-        for quiz_session_answer in quiz_session_answers:
-            quiz_session_answer.godkjent = True
+        for quiz_session_question in quiz_session_questions:
+            quiz_session_question.godkjent = True
     
         db_session.commit()
     
@@ -279,14 +277,14 @@ def approve_quiz_session_question(quiz_session_id, question_id):
     if not current_user['admin']:
         return redirect(url_for("student.student_profile"))
 
-    quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_id=quiz_session_id).all()
+    quiz_session_questions = db_session.query(QuizSessionQuestion).filter_by(quiz_sesjon_id=quiz_session_id).all()
 
-    for quiz_session_answer in filter(lambda qsa: qsa.spørsmål_id == question_id, quiz_session_answers):
-        quiz_session_answer.godkjent = True
+    for quiz_session_question in filter(lambda qsq: qsq.spørsmål_id == question_id, quiz_session_questions):
+        quiz_session_question.godkjent = True
 
     db_session.commit()
 
-    if all([qsa.godkjent for qsa in quiz_session_answers]):
+    if all([qsq.godkjent for qsq in quiz_session_questions]):
         
         quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id).first()
         quiz_session.godkjent = True
