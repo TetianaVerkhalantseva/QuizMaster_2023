@@ -176,7 +176,7 @@ def student_assessment():
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
         .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
         .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
-        .group_by(Quiz.id, Quiz.navn)
+        .group_by(Quiz.id)
         .all()
     )
 
@@ -188,7 +188,6 @@ def student_assessment():
     ))
     
     return render_template("student/student_assessment.html", quizzes=quizzes)
-
 
 
 @student.route("/quiz-greeting/<int:quiz_id>")
@@ -328,15 +327,12 @@ def quiz_result_details(quiz_session_id):
             "answer_options": {}
         }
 
-        correct_answers = 0
-
         for answer_option in question.answer_options:
 
             answer_option_data = {
                 "id": answer_option.id,
                 "answer": answer_option.svar,
             }
-
 
             question_data["answer_options"][answer_option.id] = answer_option_data
             
@@ -361,6 +357,7 @@ def quiz_result_details(quiz_session_id):
         result[question['id']] = {'answers': answers, 'not_answered': question_not_answered}
 
     return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result)
+
 
 
 @student.route("/student-logout")
