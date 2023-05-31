@@ -31,9 +31,12 @@
         <h2 class="title"> {{ quiz.navn }} </h2>
 
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
-
-        <span class="span-quiz-session-approved"> Godkjent </span>
         
+        {% if quiz_session_comment %}
+            <span class="quiz-comment"> Quiz comment </span><br>
+            <span class="quiz-comment"> {{ quiz_session_comment.tekst }} </span>
+        {% endif %}
+
         <div class="quiz-container">
 
             <div class="question-numbers" id="question-numbers">
@@ -88,20 +91,6 @@
 
                     </div>
 
-                {% endfor %}
-
-            </div>
-
-            <div class="quiz-questions-approval-comment-container">
-            
-                {% for question in questions %}
-
-                    <div class="quiz-questions-approval-comment-container" id="question-approval-comment-container-{{ loop.index }}" style="display: {{ 'block' if loop.index == init_selected else 'none' }};">
-                        
-                        <span class="span-quiz-session-answer-approved"> Godkjent </span>
-
-                    </div>
-                
                 {% endfor %}
 
             </div>
