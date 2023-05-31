@@ -72,7 +72,7 @@
 
                 {% for question in questions %}
 
-                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == init_selected else ''}}{{' last-question-number' if loop.index == questions|length else ''}}{{' correct' if result[question.id]['correct'] else ''}}{{' particulary-correct' if result[question.id]['particulary_correct'] else ''}}{{' incorrect' if result[question.id]['incorrect'] else ''}}{{' not-answered' if result[question.id]['not_answered'] else ''}}" onclick="selectQuestion({{ loop.index }})">
+                    <div id="question-{{ loop.index }}" class="question-number{{' selected' if loop.index == init_selected else ''}}{{' last-question-number' if loop.index == questions|length else ''}}{{' correct' if result[question.id]['correct'] else ''}}{{' particulary-correct' if result[question.id]['particulary_correct'] else ''}}{{' incorrect' if result[question.id]['incorrect'] else ''}}{{' not-answered' if result[question.id]['not_answered'] else ''}}{{' text-answer' if result[question.id]['text_answer'] and not result[question.id]['not_answered'] else ''}}" onclick="selectQuestion({{ loop.index }})">
                         <p> {{ loop.index }} </p>
                     </div>
 

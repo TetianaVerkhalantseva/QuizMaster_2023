@@ -7,7 +7,7 @@
 }
 
 .particulary-correct {
-    background-color: #e0b53d
+    background-color: #e0b53d;
 }
 
 .incorrect {
@@ -16,6 +16,10 @@
 
 .not-answered {
     background-color: #8080ff;
+}
+
+.text-answer {
+    background-color: #aaa;
 }
 
 .selected {
