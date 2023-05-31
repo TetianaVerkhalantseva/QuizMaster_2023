@@ -198,7 +198,8 @@ def quiz_session_details(quiz_session_id):
         question_data = {
             "id": question.id,
             "question": question.spørsmål,
-            "answer_options": {}
+            "answer_options": {},
+            "exclude": False
         }
 
         correct_answers = 0
@@ -208,7 +209,7 @@ def quiz_session_details(quiz_session_id):
             answer_option_data = {
                 "id": answer_option.id,
                 "answer": answer_option.svar,
-                "correct": answer_option.korrekt
+                "correct": answer_option.korrekt,
             }
 
             correct_answers += answer_option.korrekt
@@ -224,6 +225,12 @@ def quiz_session_details(quiz_session_id):
     for question in questions:
 
         quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).first()
+
+        if quiz_session_question is None:
+
+            question['exclude'] = True
+
+            continue
 
         quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).all()
 
@@ -251,7 +258,12 @@ def quiz_session_details(quiz_session_id):
 
         quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session_id).first()
 
-    return render_template("admin/quiz_session_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result, init_selected=init_selected, quiz_session_comment=quiz_session_comment)
+    return render_template(
+        "admin/quiz_session_details.html",
+        quiz_session=quiz_session, quiz=quiz,
+        questions=list(filter(lambda q: not q['exclude'], questions)),
+        result=result, init_selected=init_selected, quiz_session_comment=quiz_session_comment
+    )
 
 
 @admin.route("/approve-quiz-session/<int:quiz_session_id>")
