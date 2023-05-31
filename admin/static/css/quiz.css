@@ -136,7 +136,7 @@ body {
 }
 
 .button-approve-quiz-session {
-    margin-left: 70%;
+    margin: 5px auto;
     font-size: 120%;
 }
 
@@ -253,5 +253,22 @@ body {
     border-radius: 15px;
     background: #ddd;
     line-height: 1.5;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+.span-quiz-session-question-comment {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 20px 10px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    background: #ddd;
+    line-height: 1.5;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+.p-answer-text {
+    font-size: 120%;
     font-family: "Microsoft YaHei", sans-serif;
 }

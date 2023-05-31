@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
 
-from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, QuizComment, db_session
+from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, QuizComment, QuestionComment, db_session
 from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 
@@ -198,7 +198,8 @@ def quiz_session_details(quiz_session_id):
         question_data = {
             "id": question.id,
             "question": question.spørsmål,
-            "answer_options": {}
+            "answer_options": {},
+            "exclude": False
         }
 
         correct_answers = 0
@@ -208,7 +209,7 @@ def quiz_session_details(quiz_session_id):
             answer_option_data = {
                 "id": answer_option.id,
                 "answer": answer_option.svar,
-                "correct": answer_option.korrekt
+                "correct": answer_option.korrekt,
             }
 
             correct_answers += answer_option.korrekt
@@ -225,6 +226,12 @@ def quiz_session_details(quiz_session_id):
 
         quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).first()
 
+        if quiz_session_question is None:
+
+            question['exclude'] = True
+
+            continue
+
         quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).all()
 
         answers = {}
@@ -232,19 +239,31 @@ def quiz_session_details(quiz_session_id):
         for ao in quiz_session_answers:
             answers[ao.svarmulighet_id] = {'correct': question['answer_options'][ao.svarmulighet_id]['correct']}
 
-        question_not_answered = len(answers) == 0
-        question_correct = all([answer['correct'] for answer in answers.values()]) and set(answers.keys()) == set([ao['id'] for ao in question['answer_options'].values() if ao['correct']]) and not question_not_answered
-        question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
-        question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
+        text_answer = not question['answer_options']
+
+        question_not_answered = len(answers) == 0 if not text_answer else not quiz_session_question.tekstsvar
+        question_correct = all([answer['correct'] for answer in answers.values()]) and set(answers.keys()) == set([ao['id'] for ao in question['answer_options'].values() if ao['correct']]) and not question_not_answered and not text_answer
+        question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered and not text_answer
+        question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered and not text_answer
+
+        question_comment = db_session.query(QuestionComment).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).first()
 
         result[question['id']] = {
+            'text_answer': text_answer, 'answer_text': quiz_session_question.tekstsvar,
+            'comment': question_comment.tekst if question_comment else None,
+            'quiz_session_question_id': quiz_session_question.id,
             'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct,
             'incorrect': question_incorrect, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
         }
 
         quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session_id).first()
 
-    return render_template("admin/quiz_session_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result, init_selected=init_selected, quiz_session_comment=quiz_session_comment)
+    return render_template(
+        "admin/quiz_session_details.html",
+        quiz_session=quiz_session, quiz=quiz,
+        questions=list(filter(lambda q: not q['exclude'], questions)),
+        result=result, init_selected=init_selected, quiz_session_comment=quiz_session_comment
+    )
 
 
 @admin.route("/approve-quiz-session/<int:quiz_session_id>")
@@ -308,6 +327,26 @@ def comment_quiz_session(quiz_session_id):
     db_session.commit()
 
     return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_id))
+
+
+@admin.route("/comment-quiz-session-question/<int:quiz_session_question_id>", methods=["POST"])
+@login_required
+def comment_quiz_session_question(quiz_session_question_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
+    init_selected = request.args.get('initSelected', 1, type=int)
+
+    quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(id=quiz_session_question_id).first()
+
+    question_comment = QuestionComment(quiz_sesjon_spørsmål_id=quiz_session_question_id, bruker_id=current_user['id'], tekst=request.form['comment'])
+
+    db_session.add(question_comment)
+
+    db_session.commit()
+
+    return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_question.quiz_sesjon_id, initSelected=init_selected))
 
 
 @admin.route("/admin-logout")
