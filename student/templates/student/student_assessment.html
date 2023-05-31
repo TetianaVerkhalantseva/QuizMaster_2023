@@ -23,7 +23,7 @@
 
             {% for quiz in quizzes %}
 
-                {% if quiz.number_of_questions != 0 and quiz.id in session['passed_quizzes'] %}
+                {% if quiz.number_of_questions != 0 %}
 
                     <a {{ "href=" + url_for('student.quiz_result_details', quiz_session_id=quiz.quiz_session_id) if quiz.approved else '' }} class="quiz-item {{'quiz-item-passed' if quiz.approved else 'quiz-item-not-passed'}}">
 
