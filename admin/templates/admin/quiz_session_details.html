@@ -114,9 +114,7 @@
                             <button type="button" class="button" onclick="selectQuestion({{ loop.index + 1 }})">Neste</button>
                         {% endif %}
 
-                        {% if loop.index == questions|length %}
-                            <a href="{{ url_for('admin.assessment') }}" class="button"> Velg Quiz </a>
-                        {% endif %}
+                        <a href="{{ url_for('admin.assessment') }}" class="button"> Avslutt </a>
 
                     </div>
 
