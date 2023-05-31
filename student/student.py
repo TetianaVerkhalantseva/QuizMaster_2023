@@ -293,16 +293,16 @@ def quiz(quiz_id):
     return render_template("student/quiz.html", quiz=quiz, questions=questions)
 
 
-@student.route("/quiz-result-details/<int:quiz_session_id>")
+@student.route("/quiz-result-details/<int:quiz_id>")
 @login_required
-def quiz_result_details(quiz_session_id):
+def quiz_result_details(quiz_id):
 
     if current_user['admin']:
         return redirect(url_for("admin.admin_profile"))
 
-    quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id, student_id=current_user['id']).first()
+    quiz_session = db_session.query(QuizSession).filter_by(quiz_id=quiz_id, student_id=current_user['id']).first()
 
-    quiz = db_session.query(Quiz).filter_by(id=quiz_session['quiz_id']).first()
+    quiz = db_session.query(Quiz).filter_by(id=quiz_session.quiz_id).first()
 
     questions_from_db = (
         db_session.query(Question)
@@ -337,7 +337,7 @@ def quiz_result_details(quiz_session_id):
 
     for question in questions:
 
-        quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).first()
+        quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session.id).first()
 
         quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).all()
 
@@ -352,7 +352,7 @@ def quiz_result_details(quiz_session_id):
             'answers': answers, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
         }
 
-        quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session_id).first()
+        quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session.id).first()
 
     return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result, quiz_session_comment=quiz_session_comment)
 
