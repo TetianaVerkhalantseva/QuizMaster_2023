@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import IntegrityError
 
-from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, QuizComment, db_session
+from models import User, Quiz, Question, QuestionCategory, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, QuizComment, QuestionComment, db_session
 from forms import LoginForm, RegistrationForm, AddCategoryForm
 
 
@@ -237,7 +237,11 @@ def quiz_session_details(quiz_session_id):
         question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
         question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
 
+        question_comment = db_session.query(QuestionComment).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).first()
+
         result[question['id']] = {
+            'comment': question_comment.tekst if question_comment else None,
+            'quiz_session_question_id': quiz_session_question.id,
             'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct,
             'incorrect': question_incorrect, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
         }
@@ -308,6 +312,26 @@ def comment_quiz_session(quiz_session_id):
     db_session.commit()
 
     return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_id))
+
+
+@admin.route("/comment-quiz-session-question/<int:quiz_session_question_id>", methods=["POST"])
+@login_required
+def comment_quiz_session_question(quiz_session_question_id):
+
+    if not current_user['admin']:
+        return redirect(url_for("student.student_profile"))
+
+    init_selected = request.args.get('initSelected', 1, type=int)
+
+    quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(id=quiz_session_question_id).first()
+
+    question_comment = QuestionComment(quiz_sesjon_spørsmål_id=quiz_session_question_id, bruker_id=current_user['id'], tekst=request.form['comment'])
+
+    db_session.add(question_comment)
+
+    db_session.commit()
+
+    return redirect(url_for("admin.quiz_session_details", quiz_session_id=quiz_session_question.quiz_sesjon_id, initSelected=init_selected))
 
 
 @admin.route("/admin-logout")

@@ -255,3 +255,15 @@ body {
     line-height: 1.5;
     font-family: "Microsoft YaHei", sans-serif;
 }
+
+.span-quiz-session-question-comment {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 20px 10px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    background: #ddd;
+    line-height: 1.5;
+    font-family: "Microsoft YaHei", sans-serif;
+}

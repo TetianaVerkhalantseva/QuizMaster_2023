@@ -136,19 +136,21 @@
                             <span class="span-quiz-session-answer-approved"> Godkjent spørsmål </span>
                         {% endif %}
 
-                        <form class="form-quiz-session-answer-comment" action="#" method="post">
+                        {% if result[question.id]['comment'] is none %}
 
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <form class="form-quiz-session-answer-comment" action="{{ url_for('admin.comment_quiz_session_question', quiz_session_question_id=result[question.id]['quiz_session_question_id'], initSelected=loop.index) }}" method="post">
 
-                            <input type="hidden" name="quiz_session_id" value="{{ quiz_session.id }}">
-                            <input type="hidden" name="question_id" value="{{ question.id }}">
-                            <input type="hidden" name="initSelected" value="{{ loop.index }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                            <textarea name="comment" class="textarea-quiz-session-answer-comment" placeholder="Send inn en kommentar til spørsmålet"></textarea>
+                                <textarea name="comment" class="textarea-quiz-session-answer-comment" placeholder="Send inn en kommentar til spørsmålet" required></textarea>
 
-                            <input type="submit" class="submit-quiz-session-answer-comment" value="Send kommentar">
+                                <input type="submit" class="submit-quiz-session-answer-comment" value="Send kommentar">
 
-                        </form>
+                            </form>
+
+                        {% else %}
+                            <span class="span-quiz-session-question-comment"> {{ result[question.id]['comment'] }} </span>
+                        {% endif %}
 
                     </div>
 
