@@ -302,7 +302,7 @@ def quiz_result_details(quiz_session_id):
 
     quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id, student_id=current_user['id']).first()
 
-    quiz = db_session.query(Quiz).filter_by(id=quiz_session.quiz_id).first()
+    quiz = db_session.query(Quiz).filter_by(id=quiz_session.id).first()
 
     questions_from_db = (
         db_session.query(Question)
