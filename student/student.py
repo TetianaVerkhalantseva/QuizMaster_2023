@@ -141,7 +141,11 @@ def student_profile():
             .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
             .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
             .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
-            .group_by(Quiz.id, Quiz.navn)
+            .filter(~Quiz.id.in_(
+                db_session.query(QuizSession.quiz_id)
+                .filter(QuizSession.student_id == current_user["id"])
+            ))
+            .group_by(Quiz.id)
             .all()
         )
 
@@ -302,7 +306,7 @@ def quiz_result_details(quiz_session_id):
 
     quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id, student_id=current_user['id']).first()
 
-    quiz = db_session.query(Quiz).filter_by(id=quiz_session_id).first()
+    quiz = db_session.query(Quiz).filter_by(id=quiz_session.quiz_id).first()
 
     questions_from_db = (
         db_session.query(Question)
