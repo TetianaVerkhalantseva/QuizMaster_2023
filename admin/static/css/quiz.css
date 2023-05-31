@@ -267,3 +267,8 @@ body {
     line-height: 1.5;
     font-family: "Microsoft YaHei", sans-serif;
 }
+
+.p-answer-text {
+    font-size: 120%;
+    font-family: "Microsoft YaHei", sans-serif;
+}

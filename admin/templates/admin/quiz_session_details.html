@@ -94,17 +94,27 @@
                             <span class="span-question-not-answered"> Ikke besvart </span>
                         {% endif %}
 
-                        <div class="answer-options">
+                        {% if not result[question.id]['text_answer'] %}
 
-                            {% for answer_option in question.answer_options %}
+                            <div class="answer-options">
 
-                                <div class="answer-option">
-                                    <span id="{{ answer_option }}" class="{{ ' correct' if answer_option in result[question.id]['answers'] and result[question.id]['answers'][answer_option]['correct'] else '' }}{{' correct-not-selected' if question.answer_options[answer_option]['correct'] and answer_option not in result[question.id]['answers'] else ''}}{{' incorrect' if answer_option in result[question.id]['answers'] and not result[question.id]['answers'][answer_option]['correct'] else ''}}"> {{ question.answer_options[answer_option]['answer'] }} </span>
-                                </div>
+                                {% for answer_option in question.answer_options %}
 
-                            {% endfor %}
+                                    <div class="answer-option">
+                                        <span id="{{ answer_option }}" class="{{ ' correct' if answer_option in result[question.id]['answers'] and result[question.id]['answers'][answer_option]['correct'] else '' }}{{' correct-not-selected' if question.answer_options[answer_option]['correct'] and answer_option not in result[question.id]['answers'] else ''}}{{' incorrect' if answer_option in result[question.id]['answers'] and not result[question.id]['answers'][answer_option]['correct'] else ''}}"> {{ question.answer_options[answer_option]['answer'] }} </span>
+                                    </div>
 
-                        </div>
+                                {% endfor %}
+
+                            </div>
+
+                        {% else %}
+
+                            {% if not result[question.id]['not_answered'] %}
+                                <p class="p-answer-text"> {{ result[question.id]['answer_text'] }} </p>
+                            {% endif %}
+                        
+                        {% endif %}
 
                         {% if loop.index != 1 %}
                             <button type="button" class="button" onclick="selectQuestion({{ loop.index - 1 }})">Forrige</button>

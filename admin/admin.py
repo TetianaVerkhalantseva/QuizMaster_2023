@@ -232,7 +232,9 @@ def quiz_session_details(quiz_session_id):
         for ao in quiz_session_answers:
             answers[ao.svarmulighet_id] = {'correct': question['answer_options'][ao.svarmulighet_id]['correct']}
 
-        question_not_answered = len(answers) == 0
+        text_answer = not question['answer_options']
+
+        question_not_answered = len(answers) == 0 if not text_answer else not quiz_session_question.tekstsvar
         question_correct = all([answer['correct'] for answer in answers.values()]) and set(answers.keys()) == set([ao['id'] for ao in question['answer_options'].values() if ao['correct']]) and not question_not_answered
         question_incorrect = not any([answer['correct'] for answer in answers.values()]) and not question_not_answered
         question_particulary_correct = not question_correct and not question_incorrect and not question_not_answered
@@ -240,6 +242,7 @@ def quiz_session_details(quiz_session_id):
         question_comment = db_session.query(QuestionComment).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).first()
 
         result[question['id']] = {
+            'text_answer': text_answer, 'answer_text': quiz_session_question.tekstsvar,
             'comment': question_comment.tekst if question_comment else None,
             'quiz_session_question_id': quiz_session_question.id,
             'answers': answers, 'correct': question_correct, 'particulary_correct': question_particulary_correct,
