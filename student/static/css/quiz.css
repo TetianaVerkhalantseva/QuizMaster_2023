@@ -131,9 +131,9 @@ body {
 .quiz-comment {
     margin: 5px auto;
     width: fit-content;
-    font-size: 130%;
+    font-size: 120%;
     font-weight: normal;
-    color: #8080ff;
+    color: #db3737;
     text-align: center;
 }
 

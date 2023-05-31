@@ -363,8 +363,17 @@ def quiz_result_details(quiz_id):
 
     quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session.id).first()
 
+    question_comments = (
+        db_session.query(Question.id, QuestionComment.tekst)
+        .join(QuizSessionQuestion, QuizSessionQuestion.spørsmål_id == Question.id)
+        .join(QuestionComment, QuestionComment.quiz_sesjon_spørsmål_id == QuizSessionQuestion.id)
+        .filter(QuizSessionQuestion.quiz_sesjon_id == quiz_session.id)
+        .order_by(Question.id)
+        .all()
+    )
+
     return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result,\
-                           quiz_session_comment=quiz_session_comment)
+                           quiz_session_comment=quiz_session_comment, question_comments=question_comments)
 
 
 @student.route("/student-logout")
