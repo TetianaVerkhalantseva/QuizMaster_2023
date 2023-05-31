@@ -19,6 +19,12 @@
 
     <div class="container">
 
+        {% if quizzes %}
+            <h2 class="title">Vurderinger</h2>
+        {% else %}    
+            <h2 class="title">Ingen vurderinger</h2>
+        {% endif %}
+        
         <div class="quiz-list">
 
             {% for quiz in quizzes %}
