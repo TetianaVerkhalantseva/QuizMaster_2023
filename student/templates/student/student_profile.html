@@ -28,7 +28,11 @@
 
     <div class="container">
 
-        <h2 class="title">Velg quiz</h2>
+        {% if quizzes %}
+            <h2 class="title">Velg quiz</h2>
+        {% else %}    
+            <h2 class="title">Alle quizer er tatt</h2>
+        {% endif %}
 
         <div class="quiz-list">
 
