@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
-from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, db_session, QuizComment, QuestionComment
+from models import Quiz, QuestionCategory, Question, QuestionHasQuiz, QuizSession, QuizSessionQuestion, QuizSessionAnswer, db_session, QuizComment, QuestionComment, QuizSessionQuestion
 from utils import parse_quiz_form_data
 
 import ast
@@ -120,7 +120,7 @@ def student_registration():
             flash(str(form.errors), category="error")
     
     return render_template("student/student_registration.html", form=form)
-    
+
 
 @student.route("/student-profile")
 @login_required
@@ -176,13 +176,18 @@ def student_assessment():
             func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
             func.group_concat(QuestionCategory.navn, ',').label('categories')
         )
-        .join(QuizSession, Quiz.id == QuizSession.quiz_id)
+        .join(QuizSession, QuizSession.quiz_id == Quiz.id)
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
         .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
         .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
+        .filter(Quiz.id.in_(
+            db_session.query(QuizSession.quiz_id)
+            .filter(QuizSession.student_id == current_user["id"])
+        ))
         .group_by(Quiz.id)
         .all()
     )
+
 
     quizzes = list(map(
         lambda row: {
@@ -297,14 +302,14 @@ def quiz(quiz_id):
     return render_template("student/quiz.html", quiz=quiz, questions=questions)
 
 
-@student.route("/quiz-result-details/<int:quiz_session_id>")
+@student.route("/quiz-result-details/<int:quiz_id>")
 @login_required
-def quiz_result_details(quiz_session_id):
+def quiz_result_details(quiz_id):
 
     if current_user['admin']:
         return redirect(url_for("admin.admin_profile"))
 
-    quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id, student_id=current_user['id']).first()
+    quiz_session = db_session.query(QuizSession).filter_by(quiz_id=quiz_id, student_id=current_user['id']).first()
 
     quiz = db_session.query(Quiz).filter_by(id=quiz_session.quiz_id).first()
 
@@ -341,7 +346,7 @@ def quiz_result_details(quiz_session_id):
 
     for question in questions:
 
-        quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session_id).first()
+        quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session.id).first()
 
         quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).all()
 
@@ -356,10 +361,10 @@ def quiz_result_details(quiz_session_id):
             'answers': answers, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
         }
 
-        quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session_id).first()
+    quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session.id, ).first()
 
-    return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result, quiz_session_comment=quiz_session_comment)
-
+    return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result,\
+                           quiz_session_comment=quiz_session_comment)
 
 
 @student.route("/student-logout")

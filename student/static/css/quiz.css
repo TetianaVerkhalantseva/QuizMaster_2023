@@ -128,9 +128,16 @@ body {
     text-align: center;
 }
 
-.quiz-questions-approval-comment-container {
-    width: 300px;
-    border-left: 2px solid #444;
+.quiz-comment {
+    margin: 5px auto;
+    width: fit-content;
+    font-size: 130%;
+    font-weight: normal;
+    color: #8080ff;
+    text-align: center;
 }
 
-
+.quiz-questions-approval-comment-container {
+    width: 300px;
+    border: 2px solid #444;
+}
