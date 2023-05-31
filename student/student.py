@@ -251,7 +251,7 @@ def quiz(quiz_id):
 
         result = parse_quiz_form_data(questions, request.form)
 
-        quiz_session = QuizSession(quiz_id=quiz_id, student_id=1, godkjent=0)
+        quiz_session = QuizSession(quiz_id=quiz_id, student_id=current_user['id'], godkjent=0)
 
         db_session.add(quiz_session)
 
