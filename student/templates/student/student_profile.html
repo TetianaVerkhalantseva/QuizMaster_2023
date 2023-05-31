@@ -34,7 +34,7 @@
 
             {% for quiz in quizzes %}
 
-                {% if quiz.number_of_questions != 0 and quiz.id not in session['passed_quizzes'] %}
+                {% if quiz.number_of_questions != 0 and quiz.id not in quiz_sessions.quiz_id %}
 
                     <a {{ "href=" + url_for('student.quiz_greeting', quiz_id=quiz.id) if quiz.id not in session['passed_quizzes'] else '' }} class="quiz-item">
 
@@ -43,7 +43,7 @@
                         <p class="quiz-description"> {{ quiz.description }} </p>
 
                         <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz.number_of_questions }} </p>
-                        
+                                    
                         <p class="quiz-extra-info quiz-extra-info-list"> 
                         {% for category in quiz.categories %}
                             <span> {{ category }} </span>

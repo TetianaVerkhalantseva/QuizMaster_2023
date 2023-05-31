@@ -141,9 +141,11 @@ def student_profile():
             .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
             .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
             .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
-            .group_by(Quiz.id, Quiz.navn)
+            .group_by(Quiz.id)
             .all()
         )
+
+        quiz_sessions = db_session.query(QuizSession).filter_by(student_id = current_user['id'])
 
         quizzes = list(map(
             lambda row: {
@@ -152,7 +154,7 @@ def student_profile():
             quizzes
         ))
 
-        return render_template("student/student_profile.html", quizzes=quizzes)
+        return render_template("student/student_profile.html", quizzes=quizzes, quiz_sessions=quiz_sessions)
 
 
 @student.route("/student-assessment")
