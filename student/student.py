@@ -361,7 +361,7 @@ def quiz_result_details(quiz_id):
             'answers': answers, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
         }
 
-    quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session.id, ).first()
+    quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session.id).first()
 
     return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result,\
                            quiz_session_comment=quiz_session_comment)
