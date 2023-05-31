@@ -32,8 +32,6 @@
 
         <div class="quiz-list">
 
-            {% set sum = 0 %}
-
             {% for quiz in quizzes %}
 
                 {% if quiz.number_of_questions != 0 and quiz.id not in session['passed_quizzes'] %}
@@ -54,15 +52,9 @@
 
                     </a>
 
-                    {% set sum = sum + 1 %}
-
                 {% endif %}
 
             {% endfor %}
-
-            {% if sum == 0 %}
-                <h3><span>You have taken all of the quizzes</span></h3>
-            {% endif %}
 
         </div>
 
