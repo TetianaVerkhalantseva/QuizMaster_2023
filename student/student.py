@@ -257,7 +257,6 @@ def quiz(quiz_id):
 
         db_session.commit()
 
-        # TODO Implement text answer
         for question_id in result:
 
             quiz_session_question = QuizSessionQuestion(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, godkjent=0)
@@ -284,15 +283,6 @@ def quiz(quiz_id):
         if current_user['admin']:
 
             return redirect(url_for("admin.assessment"))
-            #return render_template(
-                #"student/quiz_result.html",
-                #quiz=quiz,
-                #correct=len(list(filter(lambda question: question['correct'], result.values()))),
-                #particulary_correct=len(list(filter(lambda question: question['particulary_correct'], result.values()))),
-                #incorrect=len(list(filter(lambda question: question['incorrect'], result.values()))),
-                #not_answered=len(list(filter(lambda question: question['not_answered'], result.values()))),
-                #result=str(result)
-            #)
         
         else:
 
