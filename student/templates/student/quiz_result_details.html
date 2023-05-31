@@ -89,6 +89,24 @@
                             <a href="{{ url_for('student.student_assessment') }}" class="button"> Avslutt </a>
                         {% endif %}
 
+                        {% if question_comments %}
+
+                            {% for comment in question_comments %}
+                            
+                                <div class="quiz-comment">
+                                    
+                                    {% if comment[0] == question.id %}
+                                        <span class="quiz-comment">{{ comment[1] }}</span>
+                                    {% endif %}
+                                
+                                </div> 
+                            
+                            {% endfor %}
+
+                        {% else %}
+                            <span>No comments to display</span>
+                        {% endif %}
+
                     </div>
 
                 {% endfor %}
