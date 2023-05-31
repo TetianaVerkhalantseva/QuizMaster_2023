@@ -172,7 +172,7 @@ def student_assessment():
             func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
             func.group_concat(QuestionCategory.navn, ',').label('categories')
         )
-        .join(QuizSession, Quiz.id == QuizSession.quiz_id)
+        .join(QuizSession, QuizSession.quiz_id == Quiz.id)
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
         .join(Question, QuestionHasQuiz.spørsmål_id == Question.id)
         .join(QuestionCategory, Question.kategori_id == QuestionCategory.id)
@@ -302,7 +302,7 @@ def quiz_result_details(quiz_session_id):
 
     quiz_session = db_session.query(QuizSession).filter_by(id=quiz_session_id, student_id=current_user['id']).first()
 
-    quiz = db_session.query(Quiz).filter_by(id=quiz_session.id).first()
+    quiz = db_session.query(Quiz).filter_by(id=quiz_session['quiz_id']).first()
 
     questions_from_db = (
         db_session.query(Question)
