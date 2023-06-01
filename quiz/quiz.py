@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from sqlalchemy import func
 
-from models import Quiz, Question, QuestionCategory, AnswerOption, QuestionHasQuiz, db_session
+from models import Quiz, Question, QuestionCategory, AnswerOption, QuestionHasQuiz, QuizSessionAnswer, db_session
 
 
 quiz = Blueprint("quiz", __name__, template_folder="templates", static_folder="static")
@@ -159,10 +159,11 @@ def question_details(question_id):
 
     answers = db_session.query(AnswerOption).filter_by(spørsmål_id=question_id).all()
 
-    answers_details = []
+    answers_details = [] if answers else None
 
-    # for answer in answers:
-    #    answers_details.append({"answer": answer.svar, "correct": answer.korrekt, "number_of_answers": db_session.query(QuizSession).filter_by(svar_id=answer.id).count()})
+    if answers_details is not None:
+        for answer in answers:
+            answers_details.append({"answer": answer.svar, "correct": answer.korrekt, "number_of_answers": db_session.query(QuizSessionAnswer).filter_by(svarmulighet_id=answer.id).count()})
 
     return render_template("quiz/question_details.html", question=question, answers=answers, answers_details=answers_details)
 

@@ -95,3 +95,8 @@ section .image {
     margin-top: 50px;
     margin-bottom: 50px;
 }
+
+.p-text-answer {
+    font-size: 200%;
+    color: #333;
+}
