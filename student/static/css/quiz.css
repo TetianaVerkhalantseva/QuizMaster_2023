@@ -150,3 +150,8 @@ body {
     border-radius: 8px;
     font-size: 120%;
 }
+
+.p-answer-text {
+    font-size: 120%;
+    font-family: "Microsoft YaHei", sans-serif;
+}

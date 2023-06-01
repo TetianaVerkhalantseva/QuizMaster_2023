@@ -363,10 +363,13 @@ def quiz_result_details(quiz_id):
         for ao in quiz_session_answers:
             answers[ao.svarmulighet_id] = {'answer': question['answer_options'][ao.svarmulighet_id]['answer']}
 
-        question_not_answered = len(answers) == 0
+        text_answer = not question['answer_options']
+
+        question_not_answered = len(answers) == 0 if not text_answer else not quiz_session_question.tekstsvar
 
         result[question['id']] = {
-            'answers': answers, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
+            'answers': answers, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent,
+            'text_answer': text_answer, 'answer_text': quiz_session_question.tekstsvar
         }
 
     quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session.id).first()
