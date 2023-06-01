@@ -246,14 +246,27 @@ body {
     margin: 0 auto;
 }
 
-.comment-approval-container .span-quiz-session-comment {
+.comment-approval-container .comment-container {
     width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-approval-container .comment-container .span-quiz-session-comment {
     word-wrap: break-word;
     padding: 20px;
     border-radius: 15px;
     background: #ddd;
     line-height: 1.5;
     font-family: "Microsoft YaHei", sans-serif;
+}
+
+.comment-approval-container .comment-container .span-quiz-session-comment-title {
+    display: block;
+    color: #777;
+    padding: 10px;
+    text-align: left;
+    font-size: 120%;
 }
 
 .span-quiz-session-question-comment {
@@ -266,6 +279,16 @@ body {
     background: #ddd;
     line-height: 1.5;
     font-family: "Microsoft YaHei", sans-serif;
+}
+
+.span-quiz-session-question-comment-title {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    color: #777;
+    padding: 10px;
+    text-align: left;
+    font-size: 110%;
 }
 
 .p-answer-text {

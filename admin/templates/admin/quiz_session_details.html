@@ -32,7 +32,10 @@
 
             <div class="comment-approval-container">
 
-                <span class="span-quiz-session-comment"> {{ quiz_session_comment.tekst }} </span>
+                <div class="comment-container">
+                    <span class="span-quiz-session-comment-title"> Tilbakemelding til quizen </span>
+                    <span class="span-quiz-session-comment"> {{ quiz_session_comment.tekst }} </span>
+                </div>
 
                 {% if not quiz_session.godkjent %}
                     <a href="{{ url_for('admin.approve_quiz_session', quiz_session_id=quiz_session.id) }}" class="button-approve-quiz-session"> Godkjent hele quiz </a>
@@ -157,6 +160,7 @@
                             </form>
 
                         {% else %}
+                            <span class="span-quiz-session-question-comment-title"> Tilbakemelding til spørsmålet </span>
                             <span class="span-quiz-session-question-comment"> {{ result[question.id]['comment'] }} </span>
                         {% endif %}
 
