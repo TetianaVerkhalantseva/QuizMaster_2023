@@ -174,7 +174,8 @@ def student_assessment():
             QuizSession.id,
             QuizSession.godkjent,
             func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
-            func.group_concat(QuestionCategory.navn, ',').label('categories')
+            func.group_concat(QuestionCategory.navn, ',').label('categories'),
+            QuizSession.student_id
         )
         .join(QuizSession, QuizSession.quiz_id == Quiz.id)
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
@@ -184,17 +185,18 @@ def student_assessment():
             db_session.query(QuizSession.quiz_id)
             .filter(QuizSession.student_id == current_user["id"])
         ))
-        .group_by(Quiz.id)
+        .group_by(QuizSession.id)
         .all()
     )
 
 
-    quizzes = list(map(
+    quizzes = list(filter(lambda qs: qs['student_id'] == current_user['id'], map(
         lambda row: {
-            'id': row[0], 'name': row[1], 'description': row[2], 'quiz_session_id': row[3], 'approved': row[4], 'number_of_questions': row[5], 'categories': list(set(filter(bool, row[6].split(','))))
+            'id': row[0], 'name': row[1], 'description': row[2], 'quiz_session_id': row[3], 'approved': row[4], 'number_of_questions': row[5],
+            'categories': list(set(filter(bool, row[6].split(',')))), 'student_id': row[7]
         },
         quizzes
-    ))
+    )))
     
     return render_template("student/student_assessment.html", quizzes=quizzes)
 
@@ -258,7 +260,11 @@ def quiz(quiz_id):
 
     if request.method == "POST":
 
+        print(request.form)
+
         result = parse_quiz_form_data(questions, request.form)
+
+        print(result)
 
         quiz_session = QuizSession(quiz_id=quiz_id, student_id=current_user['id'], godkjent=0)
 
@@ -268,7 +274,9 @@ def quiz(quiz_id):
 
         for question_id in result:
 
-            quiz_session_question = QuizSessionQuestion(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, godkjent=0)
+            quiz_session_question = QuizSessionQuestion(
+                quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, tekstsvar=result[question_id]['text_answer'], godkjent=0
+            )
 
             db_session.add(quiz_session_question)
 
@@ -355,10 +363,13 @@ def quiz_result_details(quiz_id):
         for ao in quiz_session_answers:
             answers[ao.svarmulighet_id] = {'answer': question['answer_options'][ao.svarmulighet_id]['answer']}
 
-        question_not_answered = len(answers) == 0
+        text_answer = not question['answer_options']
+
+        question_not_answered = len(answers) == 0 if not text_answer else not quiz_session_question.tekstsvar
 
         result[question['id']] = {
-            'answers': answers, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent
+            'answers': answers, 'not_answered': question_not_answered, 'approved': quiz_session_question.godkjent,
+            'text_answer': text_answer, 'answer_text': quiz_session_question.tekstsvar
         }
 
     quiz_session_comment = db_session.query(QuizComment).filter_by(quiz_sesjon_id=quiz_session.id).first()

@@ -172,3 +172,10 @@ a {
     margin: 0 auto;
     margin-bottom: 50px;
 }
+
+.add-edit-question-info {
+    width: fit-content;
+    margin: 0 auto;
+    font-size: 120%;
+    color: #555;
+}
