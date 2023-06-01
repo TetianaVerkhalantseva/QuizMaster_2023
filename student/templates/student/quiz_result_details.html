@@ -33,7 +33,7 @@
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
         
         {% if quiz_session_comment %}
-            <span class="quiz-comment"> Quiz comment </span><br>
+            <span class="quiz-comment"> Quiz kommentar </span><br>
             <span class="quiz-comment"> {{ quiz_session_comment.tekst }} </span>
         {% endif %}
 
@@ -104,7 +104,7 @@
                             {% endfor %}
 
                         {% else %}
-                            <span>No comments to display</span>
+                            <span>Ingen kommentar</span>
                         {% endif %}
 
                     </div>
