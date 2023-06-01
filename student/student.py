@@ -174,7 +174,8 @@ def student_assessment():
             QuizSession.id,
             QuizSession.godkjent,
             func.count(func.distinct(QuestionHasQuiz.spørsmål_id)).label('number_of_questions'),
-            func.group_concat(QuestionCategory.navn, ',').label('categories')
+            func.group_concat(QuestionCategory.navn, ',').label('categories'),
+            QuizSession.student_id
         )
         .join(QuizSession, QuizSession.quiz_id == Quiz.id)
         .join(QuestionHasQuiz, Quiz.id == QuestionHasQuiz.quiz_id)
@@ -184,17 +185,18 @@ def student_assessment():
             db_session.query(QuizSession.quiz_id)
             .filter(QuizSession.student_id == current_user["id"])
         ))
-        .group_by(Quiz.id)
+        .group_by(QuizSession.id)
         .all()
     )
 
 
-    quizzes = list(map(
+    quizzes = list(filter(lambda qs: qs['student_id'] == current_user['id'], map(
         lambda row: {
-            'id': row[0], 'name': row[1], 'description': row[2], 'quiz_session_id': row[3], 'approved': row[4], 'number_of_questions': row[5], 'categories': list(set(filter(bool, row[6].split(','))))
+            'id': row[0], 'name': row[1], 'description': row[2], 'quiz_session_id': row[3], 'approved': row[4], 'number_of_questions': row[5],
+            'categories': list(set(filter(bool, row[6].split(',')))), 'student_id': row[7]
         },
         quizzes
-    ))
+    )))
     
     return render_template("student/student_assessment.html", quizzes=quizzes)
 
