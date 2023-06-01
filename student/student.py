@@ -258,7 +258,11 @@ def quiz(quiz_id):
 
     if request.method == "POST":
 
+        print(request.form)
+
         result = parse_quiz_form_data(questions, request.form)
+
+        print(result)
 
         quiz_session = QuizSession(quiz_id=quiz_id, student_id=current_user['id'], godkjent=0)
 
@@ -268,7 +272,9 @@ def quiz(quiz_id):
 
         for question_id in result:
 
-            quiz_session_question = QuizSessionQuestion(quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, godkjent=0)
+            quiz_session_question = QuizSessionQuestion(
+                quiz_sesjon_id=quiz_session.id, spørsmål_id=question_id, tekstsvar=result[question_id]['text_answer'], godkjent=0
+            )
 
             db_session.add(quiz_session_question)
 

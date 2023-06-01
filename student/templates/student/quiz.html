@@ -54,25 +54,31 @@
                             <p> {{ question.question }} </p>
                         </div>
 
-                        <div class="answer-options">
+                        {% if question.answer_options %}
 
-                            {% for answer_option in question.answer_options %}
+                            <div class="answer-options">
 
-                                <div class="answer-option">
+                                {% for answer_option in question.answer_options %}
 
-                                    {% if question.single_answer %}
-                                        <input type="radio" name="{{ question.id }}" id="{{ answer_option.id }}" value="{{ answer_option.id }} {{ 1 if answer_option.correct else 0 }}">
-                                    {% else %}
-                                        <input type="checkbox" name="{{ question.id }}" id="{{ answer_option.id }}" value="{{ answer_option.id }} {{ 1 if answer_option.correct else 0 }}">
-                                    {% endif %}
+                                    <div class="answer-option">
 
-                                    <label for="{{ answer_option.id }}"> {{ answer_option.answer }} </label>
+                                        {% if question.single_answer %}
+                                            <input type="radio" name="{{ question.id }}" id="{{ answer_option.id }}" value="{{ answer_option.id }} {{ 1 if answer_option.correct else 0 }}">
+                                        {% else %}
+                                            <input type="checkbox" name="{{ question.id }}" id="{{ answer_option.id }}" value="{{ answer_option.id }} {{ 1 if answer_option.correct else 0 }}">
+                                        {% endif %}
 
-                                </div>
+                                        <label for="{{ answer_option.id }}"> {{ answer_option.answer }} </label>
 
-                            {% endfor %}
+                                    </div>
 
-                        </div>
+                                {% endfor %}
+
+                            </div>
+
+                        {% else %}
+                            <input type="text" name="text-answer-{{ question.id }}" id="{{ question.id }}" class="answer-input" placeholder="Skriv inn svaret ditt">
+                        {% endif %}
 
                         <a href="{{ url_for('student.student_profile') }}" class="button">Avslutt</a>
 

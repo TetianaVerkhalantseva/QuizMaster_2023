@@ -141,3 +141,12 @@ body {
     width: 300px;
     border: 2px solid #444;
 }
+
+.answer-input {
+    display: block;
+    width: 300px;
+    margin: 20px auto;
+    padding: 5px;
+    border-radius: 8px;
+    font-size: 120%;
+}
