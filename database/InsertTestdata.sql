@@ -14,28 +14,29 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 INSERT INTO bruker (login, passord, fornavn, etternavn, admin) VALUES
-	('Dafna', 'pbkdf2:sha256:260000$4TvdnIt0zGgt7HZq$342dd623b89d3b1850f670339b75fbe3df9ebf4c3123946972092ff462f5ff4e', 'Tetiana', 'Dakh', 1), 
-    ('ylu002@uit.no', 'pbkdf2:sha256:260000$2OdEg0WIyuBjEKka$9d6d1f0e745fd94e65f20aa2ce5ea5b476a414d7038f66964406ceb81635b432', 'Yue', 'Luo', 1);
+    ('admin', 'pbkdf2:sha256:600000$c0N3iJF3xOmWgt8U$158e361490ee7f6dbf3fb9df74b7fd7ca73e29b3bffb21aceccb3b6c88cda58d', 'Admin', 'Lærer', 1),
+    ('student', 'pbkdf2:sha256:600000$0sVkegcldPEjRBqE$23a13db754280e69861059580f0630c81ee62afae8e9e89a5bac76c5fadf8d1c', 'Student', 'Lærer', 0); 
 
  
 INSERT INTO spørsmålskategori (navn) VALUES ('Sport'), ('Geografi'), ('Historie'), ('Musikk'), ('Kino'), ('Mat og drikke');
 
   
 INSERT INTO spørsmål (spørsmål, kategori_id, admin_id) VALUES
-('Hvilken bergart er steinene i curling alltid laget av?', 1, 2), 
-('Hvor mange mål scorte Ole Gunnar Solskjær for Manchester United?', 1, 2),
-('Hva heter Serena Williams tennisspillende søster?', 1, 2), 
-('Hva heter verdens nest største innsjø?', 2, 2),
-('Hva heter verdens nest største elv med tanke på vannføring?', 2, 2),
-('Hvilket land vant Fotball VM i 2010?', 1, 2),
-('For hvilket lag spilte Michael Jordan mesteparten av karrieren?', 1, 2),
-('Hva heter Norges nordligste punkt?', 2, 2),
-('Hva heter det tredje høyeste fjellet i verden?', 2, 2),
-('I hvilket land startet man å dyrke bananer?', 2, 2),
-('Hvem av disse har vært statsminister i Norge?', 3, 2),
-('D.D.E ga ut «Rompa mi» i 1996. Hvor kommer dette trønderbaserte bandet fra?', 4, 2),
-('Hvem av disse skuespillerne er dubbet i Flåklypa grand prix?', 5, 2),
-('Hva kalte man ølet som vikingene pleide å brygge?', 6, 2);
+('Hvilken bergart er steinene i curling alltid laget av?', 1, 1), 
+('Hvor mange mål scorte Ole Gunnar Solskjær for Manchester United?', 1, 1),
+('Hva heter Serena Williams tennisspillende søster?', 1, 1), 
+('Hva heter verdens nest største innsjø?', 2, 1),
+('Hva heter verdens nest største elv med tanke på vannføring?', 2, 1),
+('Hvilket land vant Fotball VM i 2010?', 1, 1),
+('For hvilket lag spilte Michael Jordan mesteparten av karrieren?', 1, 1),
+('Hva heter Norges nordligste punkt?', 2, 1),
+('Hva heter det tredje høyeste fjellet i verden?', 2, 1),
+('I hvilket land startet man å dyrke bananer?', 2, 1),
+('Hvem av disse har vært statsminister i Norge?', 3, 1),
+('D.D.E ga ut «Rompa mi» i 1996. Hvor kommer dette trønderbaserte bandet fra?', 4, 1),
+('Hvem av disse skuespillerne er dubbet i Flåklypa grand prix?', 5, 1),
+('Hva kalte man ølet som vikingene pleide å brygge?', 6, 1),
+('Hvilket land hadde dronninger gjennom hele 1900-tallet?', 3, 1);
 
 
 INSERT INTO svarmulighet (svar, korrekt, spørsmål_id) VALUES
@@ -56,13 +57,13 @@ INSERT INTO svarmulighet (svar, korrekt, spørsmål_id) VALUES
 
 
 INSERT INTO quiz (navn, beskrivelse, admin_id) VALUES
-	('Kunnskapsduellen', 'Kunnskapsduellen. Hva vet du egentlig? Quiz_1 av Yue', 2), 
-    ('Quizmania', 'Hvor mye kan du om Sport og Geografi? Quiz_2 av Yue', 2), 
-    ('Quizmaster', 'Quizmaster: Den store kunnskapstesten. Quiz_3 av Yue', 2);
+	('Kunnskapsduellen', 'Kunnskapsduellen. Hva vet du egentlig? Quiz_1 av Admin', 1), 
+    ('Quizmania', 'Hvor mye kan du om Sport og Geografi? Quiz_2 av Admin', 1), 
+    ('Quizmaster', 'Quizmaster: Den store kunnskapstesten. Quiz_3 av Admin', 1);
 
 
 INSERT INTO spørsmål_har_quiz (spørsmål_id, quiz_id) VALUES
 	(1, 1), (2, 1), (3, 1), (4, 1),(5, 1),
     (6, 2), (7, 2), (8, 2), (9, 2), (10, 2), 
-    (11, 3), (12, 3), (13, 3), (14, 3);
+    (11, 3), (12, 3), (13, 3), (14, 3), (15, 3);
     
