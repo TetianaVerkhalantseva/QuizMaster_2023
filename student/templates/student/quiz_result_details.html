@@ -33,8 +33,8 @@
         <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
         
         {% if quiz_session_comment %}
-            <span class="quiz-comment"> Quiz kommentar </span><br>
-            <span class="quiz-comment"> {{ quiz_session_comment.tekst }} </span>
+            <span class="quiz-comment quiz-comment-title"> Tilbakemelding til quizen </span>
+            <span class="quiz-comment quiz-comment-text"> {{ quiz_session_comment.tekst }} </span>
         {% endif %}
 
         <div class="quiz-container">
@@ -106,7 +106,8 @@
                                 <div class="quiz-comment">
                                     
                                     {% if comment[0] == question.id %}
-                                        <span class="quiz-comment">{{ comment[1] }}</span>
+                                        <span class="quiz-comment quiz-comment-question-title">Tilbakemelding til spørsmålet</span>
+                                        <span class="quiz-comment ">{{ comment[1] }}</span>
                                     {% endif %}
                                 
                                 </div> 
