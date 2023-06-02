@@ -171,11 +171,11 @@ body {
 }
 
 .quiz-comment-title {
-    color: text;
+    color: #333435;
     font-size: 100%;
 }
 
 .quiz-comment-question-title {
-    color: text;
+    color: #333435;
     font-size: 60%;
 }

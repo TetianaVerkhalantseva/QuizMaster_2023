@@ -33,23 +33,25 @@
 
                     <a {{ "href=" + url_for('student.quiz_result_details', quiz_id=quiz.id) if quiz.approved else '' }} class="quiz-item {{'quiz-item-passed' if quiz.approved else 'quiz-item-not-passed'}}">
 
-                    <h3> {{ quiz.name }} </h3>
+                        <h3> {{ quiz.name }} </h3>
 
-                    <p class="quiz-description"> {{ quiz.description }} </p>
+                        <p class="quiz-description"> {{ quiz.description }} </p>
 
-                    <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz.number_of_questions }} </p>
+                        <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz.number_of_questions }} </p>
 
-                    <p class="quiz-extra-info quiz-extra-info-list">  
-                        {% for category in quiz.categories %}
-                            <span> {{ category }} </span>
-                        {% endfor %}
-                    </p>
+                        <p class="quiz-extra-info quiz-extra-info-list">  
+                            {% for category in quiz.categories %}
+                                <span> {{ category }} </span>
+                            {% endfor %}
+                        </p>
 
-                    {% if quiz.approved %}
-                        <p class="quiz-approved-message"> <span> Denne quizen er godkjent<br>Trykk for å se detaljer </span> </p>
-                    {% else %}
-                        <p class="quiz-not-approved-message"> <span> Venter på godkjenning </span> </p>
-                    {% endif %}
+                        {% if quiz.approved %}
+                            <p class="quiz-approved-message"> <span> Denne quizen er godkjent<br>Trykk for å se detaljer </span> </p>
+                        {% else %}
+                            <p class="quiz-not-approved-message"> <span> Venter på godkjenning </span> </p>
+                        {% endif %}
+
+                    </a>
                     
                 {% endif %}
                 
