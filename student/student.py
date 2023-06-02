@@ -336,7 +336,8 @@ def quiz_result_details(quiz_id):
         question_data = {
             "id": question.id,
             "question": question.spørsmål,
-            "answer_options": {}
+            "answer_options": {},
+            "exclude": False
         }
 
         for answer_option in question.answer_options:
@@ -355,6 +356,12 @@ def quiz_result_details(quiz_id):
     for question in questions:
 
         quiz_session_question = db_session.query(QuizSessionQuestion).filter_by(spørsmål_id=question['id'], quiz_sesjon_id=quiz_session.id).first()
+
+        if quiz_session_question is None:
+
+            question['exclude'] = True
+
+            continue
 
         quiz_session_answers = db_session.query(QuizSessionAnswer).filter_by(quiz_sesjon_spørsmål_id=quiz_session_question.id).all()
 
@@ -383,8 +390,9 @@ def quiz_result_details(quiz_id):
         .all()
     )
 
-    return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=questions, result=result,\
-                           quiz_session_comment=quiz_session_comment, question_comments=question_comments)
+    return render_template("student/quiz_result_details.html", quiz_session=quiz_session, quiz=quiz, questions=list(filter(lambda q: not q['exclude'], questions)),
+                           result=result, quiz_session_comment=quiz_session_comment, question_comments=question_comments
+                        )
 
 
 @student.route("/student-logout")
