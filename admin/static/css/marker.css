@@ -1,0 +1,34 @@
+.correct {
+    background-color: #80ff80;
+}
+
+.correct-not-selected {
+    background-color: #e0b53d;
+}
+
+.particulary-correct {
+    background-color: #e0b53d;
+}
+
+.incorrect {
+    background-color: #ff8080;
+}
+
+.not-answered {
+    background-color: #8080ff;
+}
+
+.text-answer {
+    background-color: #aaa;
+}
+
+.selected {
+    background-color: #383838;
+    color: #ccc;
+}
+
+.selected:hover {
+    cursor: pointer!important;
+    background-color: #383838!important;
+    color: #ccc!important;
+}

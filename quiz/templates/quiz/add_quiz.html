@@ -1,0 +1,49 @@
+{% extends 'quiz/admin_header.html' %}
+
+
+{% block title %} Legg til quiz {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/quiz.css') }}">
+
+{% endblock %}
+
+{% block header_title %} Legg til quiz {% endblock %}
+
+{% block body %}
+
+    {{ super() }}
+
+    <h2 class="add-quiz-title"> Legg til quiz </h2>
+
+    <form class="add-quiz-form" id="add-quiz-form" action="{{ url_for('quiz.add_quiz') }}" method="post">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div>
+            <input class="input-quiz-name" type="text" name="quiz_name" placeholder="Navn på quiz" required>
+        </div>
+
+        <div>
+            <textarea id="textarea-quiz-description" class="textarea-quiz-description" name="description" rows="6" cols="50" placeholder="Quiz beskrivelse..."></textarea>
+        </div>
+
+        {% for question in questions %}
+
+            <div class="question-container">
+                <span> {{ question.spørsmål }} </span>
+                <input type="checkbox" name="{{ question.id }}">
+            </div>
+
+        {% endfor %}
+
+        <input type="submit" name="submit" value="Legg til quiz">
+
+    </form>
+
+    <a href="{{ url_for('admin.admin_profile') }}" class="button button-block"> Administrator Profil </a>
+
+{% endblock %}

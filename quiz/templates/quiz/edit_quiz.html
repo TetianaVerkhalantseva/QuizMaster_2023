@@ -1,0 +1,49 @@
+{% extends 'quiz/admin_header.html' %}
+
+
+{% block title %} Rediger Quiz {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/quiz.css') }}">
+
+{% endblock %}
+
+{% block header_title %} Rediger Quiz {% endblock %}
+
+{% block body %}
+
+    {{ super() }}
+
+    <h2 class="add-quiz-title"> Rediger Quiz </h2>
+
+    <form class="edit-quiz-form" id="add-quiz-form" action="{{ url_for('quiz.edit_quiz', quiz_id=quiz.id) }}" method="post">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div>
+            <input class="input-quiz-name" type="text" name="quiz_name" value="{{ quiz.navn }}" placeholder="Navn på quiz" required>
+        </div>
+
+        <div>
+            <textarea id="textarea-quiz-description" class="textarea-quiz-description" name="description" rows="6" cols="50" placeholder="Quiz beskrivelse...">{{ quiz.beskrivelse }}</textarea>
+        </div>
+
+        {% for question in questions %}
+
+            <div class="question-container">
+                <span> {{ question.spørsmål }} </span>
+                <input type="checkbox" name="{{ question.id }}" {% if question.id in quiz_question_ids %} checked {% endif %}>
+            </div>
+
+        {% endfor %}
+
+        <input type="submit" name="submit" value="Legg til quiz">
+
+    </form>
+
+    <a href="{{ url_for('admin.admin_profile') }}" class="button button-block"> Administrator Profil </a>
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'quiz/admin_header.html' %}
+
+
+{% block title %} Legg til spørsmål {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/question.css') }}">
+
+{% endblock %}
+
+{% block header_title %} Legg til spørsmål {% endblock %}
+
+{% block body %}
+
+    {{ super() }}
+
+    <h2 class="add-question-title"> Legg til spørsmål </h2>
+
+    <p class="add-edit-question-info"> *For tekstsvar legg til bare spørsmål (uten svarmulighet). </p>
+
+    <form class="add-question-form" id="add-question-form" action="{{ url_for('quiz.add_question') }}" method="post">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div>
+            <input class="input-question" type="text" name="question" placeholder="Spørsmål" value="{{ question if question is not none else '' }}" required>
+        </div>
+
+        <div class="select-container">
+
+            <label for="category-select"> Kategori: </label>
+
+            <select name="category-select" id="category-select" form="add-question-form">
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {{ 'selected' if category_id is not none and category_id|int == category.id else '' }}> {{ category.navn }} </option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        {% for answer in answers %}
+
+            <div class="answer-container">
+                <input type="text" name="answer-{{ loop.index }}" placeholder="Svar" value="{{ answer.svar }}" required>
+                <input type="checkbox" name="correct-{{loop.index }}" value="correct" {% if answer.korrekt %} checked {% endif %}>
+            </div>
+
+        {% endfor %}
+
+        <input type="submit" name="submit" value="Legg til spørsmål">
+
+    </form>
+
+    <form class="add-answer-form" action="{{ url_for('quiz.add_answer') }}" method="post">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        {% for answer in answers %}
+
+            <input type="hidden" name="answer-{{ loop.index }}" value="{{ answer.svar }}">
+            <input type="hidden" name="correct-{{loop.index }}" value="{{ answer.korrekt }}">
+
+        {% endfor %}
+
+        <input type="text" name="new-answer" placeholder="Svar" required>
+        <input type="checkbox" name="new-correct" value="correct">
+
+        <input type="submit" name="submit" value="Legg til svar">
+
+    </form>
+
+    <a href="{{ url_for('admin.admin_profile') }}" class="button button-block"> Administrator Profil </a>
+
+{% endblock %}

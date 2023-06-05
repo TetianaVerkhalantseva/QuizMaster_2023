@@ -1,0 +1,122 @@
+.admin-full-name {
+
+    width: 20%;
+    margin: 40px auto;
+    color: #333;
+    text-align: center;
+    font-size: 2.8em;
+    font-weight: bold;
+
+}
+
+section {
+
+    width: 80%;
+    margin: 40px auto;
+    padding: 10px;
+    text-align: center;
+
+}
+
+section .section-title {
+
+    width: 20%;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    color: #555;
+    font-size: 1.8em;
+    font-weight: bold;
+
+}
+
+section .no-items-message {
+
+    width: 20%;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    color: #777;
+    font-size: 1.2em;
+    font-weight: bold;
+
+}
+
+section .button-add-container {
+    margin: 35px auto;
+}
+
+section .button-add-container .button-add {
+    text-decoration: none;
+}
+
+section .quiz-container,
+section .question-container,
+section .category-container {
+    width: 80%;
+    height: 30px;
+    margin: 10px auto;
+    padding: 10px;
+    text-align: center;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    line-height: 30px;
+}
+
+.quiz-link,
+.question-link {
+    text-decoration: none;
+    color: #333;
+}
+
+section .category-container span {
+    color: #333;
+}
+
+.quiz-container:hover,
+.question-container:hover {
+    background-color: #e6e6e6;
+    cursor: pointer;
+}
+
+section .image-button {
+    float: right;
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.add-category-form {
+    margin: 0 auto;
+    width: fit-content;
+    margin-bottom: 130px;
+}
+
+.add-category-form h3 {
+    margin: 20px auto;
+    color: #555;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.add-category-form input[type="text"] {
+    margin: 0 20px;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.add-category-form input[type="submit"] {
+    margin: 0px 5px;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: #555;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.add-category-form input[type="submit"]:hover {
+    background-color: #777;
+}

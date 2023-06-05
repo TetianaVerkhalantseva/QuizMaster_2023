@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Quiz {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/student_profile.css') }}">
+
+{% endblock %}
+
+{% block header_navbar %}
+    {% include "student/header_navbar.html" %}
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper">
+
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <div class="flash {{ category }}"> {{ message }} </div>
+        {% endfor %}
+
+        {% block content %} {% endblock %}
+
+    </div>
+
+    <div class="container">
+
+        {% if quizzes %}
+            <h2 class="title">Velg quiz</h2>
+        {% else %}    
+            <h2 class="title">Alle quizer er tatt</h2>
+        {% endif %}
+
+        <div class="quiz-list">
+
+            {% for quiz in quizzes %}
+
+                {% if quiz.number_of_questions != 0 %}
+
+                    <a {{ "href=" + url_for('student.quiz_greeting', quiz_id=quiz.id) }} class="quiz-item">
+
+                        <h3> {{ quiz.name }} </h3>
+
+                        <p class="quiz-description"> {{ quiz.description }} </p>
+
+                        <p class="quiz-extra-info quiz-extra-info-first"> Antall spørsmål: {{ quiz.number_of_questions }} </p>
+                        
+                        <p class="quiz-extra-info quiz-extra-info-list"> 
+                        {% for category in quiz.categories %}
+                            <span> {{ category }} </span>
+                        {% endfor %}
+                        </p>
+
+                    </a>    
+                {% endif %}
+
+            {% endfor %}
+        
+        </div>
+
+       
+
+    </div>
+
+{% endblock %}

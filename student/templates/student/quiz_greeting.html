@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block title %} {{ quiz.navn }} {% endblock %}
+
+{% block stylesheets %}
+
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='/css/quiz_greeting.css') }}">
+
+{% endblock %}
+
+{% block header_navbar %}
+    {% include "student/header_navbar.html" %}
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="container">
+
+        <h2 class="quiz-name"> {{ quiz.navn }} </h2>
+        <p class="quiz-description"> {{ quiz.beskrivelse }} </p>
+
+        <a href="{{ url_for('student.quiz', quiz_id=quiz.id) }}" class="start-quiz-button">Start quiz</a>
+        <br>
+        <a href="{{ url_for('student.student_profile') }}" class="tikbake-button">Tilbake</a>
+
+    </div>
+
+{% endblock %}
