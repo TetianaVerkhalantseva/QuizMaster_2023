@@ -1,3 +1,5 @@
+USE `stud_v23_tda072`;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 drop table bruker;

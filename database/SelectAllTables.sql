@@ -1,3 +1,5 @@
+USE `stud_v23_tda072`;
+
 select * from bruker;
 select * from quiz;
 select * from quiz_kommentar;
