@@ -1,2 +1,18 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/nCh5yGbu)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11099119&assignment_repo_type=AssignmentRepo)
+Hovedside: https://kark.uit.no/~tda072/flask_app/
+eller https://kark.hin.no/~tda072/flask_app/ 
+
+coderefinery.org:
+https://source.coderefinery.org/TetianaVerkhalantseva/quizmaster_2023_15 
+
+Man må kjøre pip install -r requirements.txt for å kunne kjøre koden.
+
+Databasen kommer med 2 brukere: 
+en administrator og en student. Disse brukerne er ment for å teste systemet.
+
+ADMINISTRATOR:
+Brukernavn: admin
+Passord: Admin!12
+
+Vanlig bruker - STUDENT:
+Brukernavn: student
+Passord: Student!
